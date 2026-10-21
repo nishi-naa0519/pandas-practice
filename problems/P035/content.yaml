@@ -1,0 +1,32 @@
+purpose: 2つの表を共通のキーで結合する基本形を書けるようにします。
+statement: |
+  注文テーブル `orders` に、顧客テーブル `customers` の情報を `customer_id` で結合してください。
+  **両方の表に存在する `customer_id` の行だけ**を残します(inner join)。
+
+  `orders` を左側にしてください(列の順番が `orders` の列 → `customers` の列になります)。
+data:
+- orders.csv
+- customers.csv
+setup: |
+  orders = pd.read_csv("data/orders.csv")
+  customers = pd.read_csv("data/customers.csv")
+preview: orders.head(3)
+signature: 'def solve(orders: pd.DataFrame, customers: pd.DataFrame):'
+run: solve(orders, customers)
+hints:
+- 結合は pd.merge(左, 右, on=キー)
+- pd.merge(orders, customers, on="customer_id")(how を省略すると inner)
+solution:
+  code: |
+    def solve(orders: pd.DataFrame, customers: pd.DataFrame):
+        return pd.merge(orders, customers, on="customer_id")
+  explanation: |
+    `pd.merge(左, 右, on="キー")` で、キーの値が一致する行どうしをつなげます。
+    `how` を省略すると inner join になり、**両方に存在するキーの行だけ**が残ります。
+  points: |
+    - 結合の基本形: `pd.merge(left, right, on="key")`
+    - inner(デフォルト): 両方にあるキーだけ / left: 左の行はすべて残す(次の問題)
+    - 結合したら**行数を確認**する(`len(orders)` と比べる)
+  mistakes: |
+    - `pd.merge(customers, orders, ...)` → 結果の列の順番が変わる
+    - キー名が違う表どうし(`id` と `customer_id` など)は `on` では結合できない(`left_on` / `right_on` は Read 対象)

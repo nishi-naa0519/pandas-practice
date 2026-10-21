@@ -1,0 +1,23 @@
+id: P032
+title: 表記ゆれをそろえて数える
+category: F
+problem_type: coding
+difficulty: 2
+learning_level: 2
+primary_tags:
+- method:str_lower
+- concept:inconsistent_labels
+secondary_tags:
+- method:value_counts
+- task:data_cleaning
+curriculum_items:
+- str_basic
+- value_counts
+estimated_minutes: 3
+prerequisites:
+- P019
+datasets:
+- app_users.csv
+source_type: synthetic
+variant_of: null
+created: '2026-10-22'

@@ -1,0 +1,26 @@
+id: P015
+title: 欠損率の高い順に並べる
+category: C
+problem_type: coding
+difficulty: 2
+learning_level: 2
+primary_tags:
+- method:isna
+- method:sort_values
+secondary_tags:
+- method:mean
+- task:missing_check
+- syntax:method_chaining
+- concept:missing_values
+curriculum_items:
+- isna_rate
+- sort_values
+- eda_missing
+estimated_minutes: 3
+prerequisites:
+- P014
+datasets:
+- churn_train.csv
+source_type: synthetic
+variant_of: null
+created: '2026-10-22'

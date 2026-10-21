@@ -1,0 +1,32 @@
+id: P006
+title: 初見のデータをざっと把握する
+category: A
+problem_type: exploration
+difficulty: 3
+learning_level: 3
+primary_tags:
+- task:data_overview
+secondary_tags:
+- method:shape
+- method:head
+- method:tail
+- method:sample
+- method:info
+- method:describe
+- method:dtypes
+- task:anomaly_check
+curriculum_items:
+- eda_overview
+- head_tail_sample
+- info
+- describe
+estimated_minutes: 8
+prerequisites:
+- P002
+- P004
+- P005
+datasets:
+- app_users.csv
+source_type: synthetic
+variant_of: null
+created: '2026-10-22'

@@ -1,0 +1,56 @@
+purpose: 初めて受け取ったデータの全体像を、数分で自力で把握する流れを身につけます。
+statement: |
+  アプリのユーザーデータ `app_users.csv` を受け取りました。分析を始める前に、
+  **2〜3分でデータの全体像を把握**してください。
+
+  使う関数は指定しません。これまでに使ったものを自由に組み合わせてください。
+questions: |
+  1. 何行・何列のデータか
+  2. 欠損を含む列はどれか
+  3. 文字列として読み込まれている列はどれか。それは想定どおりか
+  4. 値の範囲がおかしそうな列はあるか
+  5. データはどんな順番で並んでいそうか
+data:
+- app_users.csv
+setup: df = pd.read_csv("data/app_users.csv")
+hints:
+- サイズ → 中身 → 型と欠損 → 数値の範囲、の順に見ると漏れが少ないです
+- df.shape, df.head(), df.info(), df.describe() の4つでほとんど答えられます
+- 並び順は df.head() と df.tail() を見比べると分かります。偏りなく眺めたいときは df.sample(5)
+solution:
+  checklist: |
+    | 確認したいこと | コード |
+    |---|---|
+    | サイズ | `df.shape` |
+    | 中身・並び順 | `df.head()` / `df.tail()` / `df.sample(5, random_state=0)` |
+    | 型と欠損 | `df.info()`(または `df.dtypes` と `df.isna().sum()`) |
+    | 数値の範囲 | `df.describe()` |
+  code: |
+    df.shape
+    # %%
+    df.head()
+    # %%
+    df.tail()
+    # %%
+    df.sample(5, random_state=0)
+    # %%
+    df.info()
+    # %%
+    df.describe()
+  observations: |
+    1. **250行 × 8列**
+    2. 欠損があるのは **`avg_session_min` だけ**(19件)。`info()` の Non-Null Count が 231 になっている
+    3. `str` の列: `user_id`, `os`, `app_version`, `country`, `signup_date`
+       - `signup_date` は日付だが文字列のまま(期間を計算するなら `pd.to_datetime` が必要)
+       - `app_version` は `"3.2.1"` のような形式なので文字列で正しい
+    4. 値の範囲
+       - `sessions_7d` の **max が 999**。平均 13.7 に対して中央値(50%)は 6、std は 80 と異常に大きい → 極端な値が混ざっている
+       - `avg_session_min` の **min が -3.0**。利用時間が負になることはない
+    5. `user_id` 順・`signup_date` 順(2024-04-01 〜 2025-03-31)に並んでいる。`head()` だけ見ると古いユーザーしか見えない
+
+    ※ `os` 列の表記ゆれ(`iOS` / `ios` / `IOS`)はここでは見つからなくても大丈夫です(P032 で扱います)。
+  points: |
+    - 初見のデータでは **shape → head → info → describe** を流れで打つ
+    - `info()` は型と欠損を一度に見られる(戻り値はなく、表示するだけ)
+    - `describe()` では **mean と 50% の差、min と max** を必ず見る
+    - `head()` だけでは並び順の偏りに気づけない。`tail()` や `sample()` も見る

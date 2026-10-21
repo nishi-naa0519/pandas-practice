@@ -1,0 +1,28 @@
+purpose: 欠損の「数」ではなく「割合」を出し、問題のありそうな列から順に確認できるようにします。
+statement: '`df` の**各列の欠損率**(0〜1)を求め、**欠損率の高い順**に並べた Series を返してください。'
+data:
+- churn_train.csv
+setup: df = pd.read_csv("data/churn_train.csv")
+preview: df.head()
+signature: 'def solve(df: pd.DataFrame):'
+run: solve(df)
+hints:
+- True/False の平均は True の割合になります
+- df.isna().mean() で列ごとの欠損率
+- 並び替えは .sort_values(ascending=False)
+solution:
+  code: |
+    def solve(df: pd.DataFrame):
+        return df.isna().mean().sort_values(ascending=False)
+  explanation: |
+    1. `df.isna()` で欠損が True の表を作る
+    2. `.mean()` で列ごとの True の割合 = 欠損率
+    3. `.sort_values(ascending=False)` で大きい順に並べる
+  points: |
+    - 欠損率: `df.isna().mean()`(`.sum()` を行数で割る必要はない)
+    - 降順は `ascending=False`
+    - 欠損率ランキングは、特徴量テーブルを受け取ったら最初に見るものの1つ
+  mistakes: |
+    - `.sum()` のままにする → 欠損数になる
+    - `sort_values()` だけ → 昇順(小さい順)になる
+    - `df.isna().mean(axis=1)` → 行ごとの欠損率になってしまう

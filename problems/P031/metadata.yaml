@@ -1,0 +1,24 @@
+id: P031
+title: 日付の列から年と月を取り出す
+category: F
+problem_type: coding
+difficulty: 2
+learning_level: 2
+primary_tags:
+- method:to_datetime
+- method:dt_accessor
+secondary_tags:
+- syntax:new_column
+- concept:datetime
+- task:feature_creation
+curriculum_items:
+- to_datetime
+estimated_minutes: 4
+prerequisites:
+- P028
+- P004
+datasets:
+- orders.csv
+source_type: synthetic
+variant_of: null
+created: '2026-10-22'

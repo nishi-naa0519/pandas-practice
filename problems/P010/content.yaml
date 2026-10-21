@@ -1,0 +1,22 @@
+purpose: 「または」の条件を `|` で書けるようにします。
+statement: '`plan` が `"premium"` **または** `n_orders` が **10以上** の顧客を抽出した DataFrame を返してください。'
+data:
+- customers.csv
+setup: df = pd.read_csv("data/customers.csv")
+preview: df.head()
+signature: 'def solve(df: pd.DataFrame):'
+run: solve(df)
+hints:
+- 「または」は | を使います(or は使えません)
+- (条件1) | (条件2) のように各条件を () で囲みます
+solution:
+  code: |
+    def solve(df: pd.DataFrame):
+        return df[(df["plan"] == "premium") | (df["n_orders"] >= 10)]
+  explanation: '`|` は「どちらか一方でも True なら True」です。両方の条件を満たす行も1回だけ出てきます。'
+  points: |
+    - または: `df[(条件1) | (条件2)]`
+    - 両方満たす行が2回出ることはない(行ごとに True/False を判定しているだけ)
+  mistakes: |
+    - `or` を使う → `ValueError`
+    - 括弧を忘れる → `|` が先に計算されてエラー

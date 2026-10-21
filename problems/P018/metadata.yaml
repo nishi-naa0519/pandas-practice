@@ -1,0 +1,23 @@
+id: P018
+title: ID列が一意か確認する
+category: C
+problem_type: coding
+difficulty: 2
+learning_level: 2
+primary_tags:
+- method:nunique
+- concept:unique_key
+secondary_tags:
+- task:duplicate_check
+- task:cardinality_check
+curriculum_items:
+- nunique
+- eda_id_cardinality
+estimated_minutes: 3
+prerequisites:
+- P017
+datasets:
+- customers.csv
+source_type: synthetic
+variant_of: null
+created: '2026-10-22'

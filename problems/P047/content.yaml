@@ -1,0 +1,56 @@
+purpose: 期間や欠損が「グループによって違わないか」を確認し、集計の落とし穴に気づけるようにします。
+statement: |
+  5店舗の日次売上データ `store_sales.csv` があります。地域(`region`)ごとの売上を比較するレポートを作る予定です。
+
+  レポートを作る前に、**期間・欠損・集計の前提**に問題がないか確認してください。
+questions: |
+  1. データの期間はいつからいつまでか。店舗ごとに違いはあるか
+  2. `revenue` の欠損はどこにあるか。特定の店舗や期間に偏っていないか
+  3. 地域ごとの売上を「合計」で比べてよいか
+  4. 曜日によって売上に違いはあるか
+data:
+- store_sales.csv
+setup: df = pd.read_csv("data/store_sales.csv")
+hints:
+- 日付は pd.to_datetime で変換してから min / max を見ましょう
+- df.groupby("store_id")["date"].agg(["min", "max", "count"]) で店舗ごとの期間が分かります
+- 欠損の行だけに絞って store_id を value_counts すると偏りが分かります
+- 曜日は .dt.dayofweek(0=月曜)
+solution:
+  checklist: |
+    1. 日付を変換し、全体の期間を確認
+    2. **グループ(店舗)ごとの期間と行数**を確認
+    3. 欠損の件数だけでなく、**欠損している行がどのグループ・期間に集中しているか**
+    4. 期間や欠損がそろっていないなら、合計ではなく平均で比べる
+    5. 曜日などの周期性
+  code: |
+    df["date"] = pd.to_datetime(df["date"])
+    df["date"].min(), df["date"].max()
+    # %%
+    df.groupby("store_id")["date"].agg(["min", "max", "count"])
+    # %%
+    df.isna().sum()
+    # %%
+    missing = df[df["revenue"].isna()]
+    missing["store_id"].value_counts()
+    # %%
+    missing[missing["store_id"] == "S04"]["date"].value_counts().sort_index()
+    # %%
+    df.groupby("region")["revenue"].sum()
+    # %%
+    df.groupby("region")["units"].mean()
+    # %%
+    df["dayofweek"] = df["date"].dt.dayofweek
+    df.groupby("dayofweek")["units"].mean()
+  observations: |
+    1. 期間は 2025-04-01 〜 06-30。ただし **S05(north)は 2025-05-15 開店**で、他店舗の約半分の期間しかない
+    2. `revenue` の欠損 41件のうち **37件が S04**。うち36件は **2025-05-20 〜 05-31 に集中**(3商品 × 12日)。
+       POS障害などのシステム的な原因が疑われる。残りはばらばらに数件
+    3. 地域別の `revenue` 合計は north が east / west の約5分の1だが、**期間が短く店舗も1つだけ**なので合計では比べられない。
+       1日1商品あたりの平均 units で比べると north 34.2 / east 43.8 / west 43.5
+       また west の合計は S04 の欠損分だけ少なく出ている
+    4. 土日(dayofweek 5, 6)は平均 units が約50で、平日(約39)より約3割多い
+  points: |
+    - 期間は**全体だけでなくグループごと**に確認する: `groupby("g")["date"].agg(["min", "max", "count"])`
+    - 欠損は件数だけでなく**どこに偏っているか**を見る: `df[df["col"].isna()]["g"].value_counts()`
+    - 期間や件数がそろっていないグループどうしは、合計ではなく平均で比べる

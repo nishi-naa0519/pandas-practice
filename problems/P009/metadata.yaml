@@ -1,0 +1,21 @@
+id: P009
+title: 複数の条件で絞る(かつ)
+category: B
+problem_type: coding
+difficulty: 2
+learning_level: 2
+primary_tags:
+- syntax:multiple_conditions
+secondary_tags:
+- syntax:boolean_indexing
+curriculum_items:
+- multiple_conditions
+- boolean_indexing
+estimated_minutes: 3
+prerequisites:
+- P008
+datasets:
+- orders.csv
+source_type: synthetic
+variant_of: null
+created: '2026-10-22'

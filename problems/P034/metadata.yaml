@@ -1,0 +1,24 @@
+id: P034
+title: 重複行と目的変数の欠損を取り除く
+category: F
+problem_type: coding
+difficulty: 2
+learning_level: 2
+primary_tags:
+- method:drop_duplicates
+- method:dropna
+secondary_tags:
+- task:data_cleaning
+- concept:duplicates
+curriculum_items:
+- drop_duplicates
+- dropna
+estimated_minutes: 3
+prerequisites:
+- P017
+- P020
+datasets:
+- churn_train.csv
+source_type: synthetic
+variant_of: null
+created: '2026-10-22'

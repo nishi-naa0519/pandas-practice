@@ -1,0 +1,26 @@
+id: P041
+title: ボットを除いてアクセスの多いユーザーを見る
+category: H
+problem_type: coding
+difficulty: 2
+learning_level: 2
+primary_tags:
+- syntax:negation
+- method:isin
+secondary_tags:
+- method:value_counts
+- method:head
+- task:data_cleaning
+curriculum_items:
+- isin
+- multiple_conditions
+- value_counts
+estimated_minutes: 3
+prerequisites:
+- P011
+- P027
+datasets:
+- web_logs.csv
+source_type: synthetic
+variant_of: null
+created: '2026-10-22'

@@ -1,0 +1,27 @@
+purpose: 複数のキーで集計し、結果を普通の表として見られるようにします。
+statement: |
+  `region` と `product` の組み合わせごとに `units` の**合計**を求め、
+  `region`, `product`, `units` の3列を持つ DataFrame で返してください(行の順番は問いません)。
+data:
+- store_sales.csv
+setup: df = pd.read_csv("data/store_sales.csv")
+preview: df.head()
+signature: 'def solve(df: pd.DataFrame):'
+run: solve(df)
+hints:
+- 複数の列でグループ分けするときは groupby(["列1", "列2"])
+- 結果の index を普通の列に戻すには .reset_index()
+solution:
+  code: |
+    def solve(df: pd.DataFrame):
+        return df.groupby(["region", "product"])["units"].sum().reset_index()
+  explanation: |
+    - `groupby(["region", "product"])` のようにリストで渡すと、組み合わせごとに集計します
+    - そのままだと index が「region と product の2段」(MultiIndex)になって扱いにくいので、
+      `.reset_index()` で普通の列に戻します
+  points: |
+    - 複数キー: `df.groupby(["a", "b"])["val"].sum().reset_index()`
+    - MultiIndex は読めればよい。自分で扱うときは `reset_index()` で普通の表にしてしまう
+  mistakes: |
+    - `groupby("region", "product")` → リストにしていない
+    - `reset_index()` を忘れる → index が2段の Series のまま

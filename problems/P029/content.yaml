@@ -1,0 +1,29 @@
+purpose: 指定した列の欠損を、その列の統計量で埋められるようにします。
+statement: |
+  `age` の欠損を **`age` の中央値**で埋め、**`df` 全体**を返してください。
+  他の列の欠損はそのままにしてください。
+data:
+- customers.csv
+setup: df = pd.read_csv("data/customers.csv")
+preview: df.isna().sum()
+signature: 'def solve(df: pd.DataFrame):'
+run: solve(df)
+hints:
+- df["age"].fillna(値) で欠損を埋めた Series が返ります
+- 結果を df["age"] = ... で代入し直します
+solution:
+  code: |
+    def solve(df: pd.DataFrame):
+        df["age"] = df["age"].fillna(df["age"].median())
+        return df
+  explanation: |
+    1. `df["age"].median()` で中央値を計算(欠損は除いて計算される)
+    2. `df["age"].fillna(中央値)` で欠損を埋めた Series を作る
+    3. `df["age"] = ...` で元の列に代入し直す
+  points: |
+    - 1列の欠損を埋める: `df["col"] = df["col"].fillna(値)`
+    - `fillna` は新しい Series を返すだけ。**代入しないと df は変わらない**
+    - 中央値は極端な値に強いので、年齢や金額の穴埋めによく使う
+  mistakes: |
+    - `df.fillna(df["age"].median())` → 全列の欠損がその値で埋まる(prefecture まで 30 などになる)
+    - `df["age"].fillna(..., inplace=True)` → pandas 3 では元の df に反映されない

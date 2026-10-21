@@ -1,0 +1,20 @@
+id: P010
+title: どちらかの条件に合う行(または)
+category: B
+problem_type: coding
+difficulty: 2
+learning_level: 2
+primary_tags:
+- syntax:multiple_conditions
+secondary_tags:
+- syntax:boolean_indexing
+curriculum_items:
+- multiple_conditions
+estimated_minutes: 3
+prerequisites:
+- P009
+datasets:
+- customers.csv
+source_type: synthetic
+variant_of: null
+created: '2026-10-22'

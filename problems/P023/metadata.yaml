@@ -1,0 +1,22 @@
+id: P023
+title: カテゴリ別の平均を出す
+category: E
+problem_type: coding
+difficulty: 1
+learning_level: 1
+primary_tags:
+- method:groupby
+secondary_tags:
+- method:mean
+- task:group_comparison
+- concept:aggregation
+curriculum_items:
+- groupby_single
+estimated_minutes: 3
+prerequisites:
+- P019
+datasets:
+- orders.csv
+source_type: synthetic
+variant_of: null
+created: '2026-10-22'

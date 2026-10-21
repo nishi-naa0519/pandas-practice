@@ -1,0 +1,25 @@
+purpose: 欠損の件数だけでなく、欠損している行そのものを見て原因を探れるようにします。
+statement: '`age` **または** `prefecture` が欠損している顧客の行を抽出した DataFrame を返してください。'
+data:
+- customers.csv
+setup: df = pd.read_csv("data/customers.csv")
+signature: 'def solve(df: pd.DataFrame):'
+run: solve(df)
+hints:
+- df["age"].isna() は「age が欠損なら True」の Series です
+- 2つの条件を | でつなぎ、それぞれを () で囲みます
+solution:
+  code: |
+    def solve(df: pd.DataFrame):
+        return df[df["age"].isna() | df["prefecture"].isna()]
+  explanation: |
+    `df["age"].isna()` と `df["prefecture"].isna()` はどちらも True/False の Series です。
+    `|` で「どちらかが True」にして、boolean indexing で行を絞ります。
+    (`.isna()` はメソッド呼び出しなので、この形なら `()` で囲まなくても動きます。比較演算子を使うときは囲みます)
+  points: |
+    - 欠損している行を見る: `df[df["age"].isna()]`
+    - 欠損していない行は `df[~df["age"].isna()]`
+    - 件数だけでなく**欠損している行の中身**を見ると、「特定の期間・グループだけ欠損」などに気づける
+  mistakes: |
+    - `df[df.isna()]` → 行の抽出にならない(欠損以外が NaN になった表が返る)
+    - `df["age"] == None` や `df["age"] == np.nan` → 欠損の判定には使えない。必ず `isna()`

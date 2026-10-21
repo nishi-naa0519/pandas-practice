@@ -1,0 +1,28 @@
+purpose: train に存在しないカテゴリが test に含まれていないかを確認できるようにします。
+statement: '`region` 列について、**test にはあるが train には無い値**の集合(set)を返してください。'
+data:
+- churn_train.csv
+- churn_test.csv
+setup: |
+  train = pd.read_csv("data/churn_train.csv")
+  test = pd.read_csv("data/churn_test.csv")
+signature: 'def solve(train: pd.DataFrame, test: pd.DataFrame):'
+run: solve(train, test)
+hints:
+- Series は set(...) で値の集合にできます
+- 集合の差は A - B(A にあって B に無いもの)
+solution:
+  code: |
+    def solve(train: pd.DataFrame, test: pd.DataFrame):
+        return set(test["region"]) - set(train["region"])
+  explanation: |
+    `set(test["region"])` で test に出てくる region の集合を作り、train の集合を引きます。
+    残ったものが「test にだけある値」です。
+  points: |
+    - カテゴリ集合の比較: `set(test["col"]) - set(train["col"])`
+    - 逆向き(train にだけある値)も `set(train["col"]) - set(test["col"])` で確認できる
+    - test にだけあるカテゴリは、学習時に見たことがない値。エンコードでエラーになったり、予測が不安定になったりする
+    - 列名の比較も同じ: `set(train.columns) - set(test.columns)`
+  mistakes: |
+    - 引き算の順番を逆にする → train にだけある値になる
+    - 欠損(NaN)を含む列では、NaN が差集合に残ることがある。気になったら `value_counts()` で中身を見る

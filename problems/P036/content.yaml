@@ -1,0 +1,33 @@
+purpose: left join を使い、結合相手が見つからない行がどれくらいあるかを確認できるようにします。
+statement: |
+  `orders` に `customers` を `customer_id` で **left join** し、
+  **顧客情報が見つからなかった注文の件数**を返してください。
+
+  顧客情報が見つかったかどうかは、`customers` の `plan` 列(customers 側では欠損しない列)が
+  欠損しているかで判定してください。
+data:
+- orders.csv
+- customers.csv
+setup: |
+  orders = pd.read_csv("data/orders.csv")
+  customers = pd.read_csv("data/customers.csv")
+signature: 'def solve(orders: pd.DataFrame, customers: pd.DataFrame):'
+run: solve(orders, customers)
+hints:
+- left join は pd.merge(..., how="left")
+- 結合後の plan 列に .isna().sum()
+solution:
+  code: |
+    def solve(orders: pd.DataFrame, customers: pd.DataFrame):
+        merged = pd.merge(orders, customers, on="customer_id", how="left")
+        return merged["plan"].isna().sum()
+  explanation: |
+    `how="left"` にすると、`orders` の行はすべて残り、対応する顧客がいない行では `customers` 側の列が欠損になります。
+    customers 側で必ず値が入っている列(`plan`)の欠損を数えれば、対応のない注文の件数が分かります。
+  points: |
+    - left join: `pd.merge(left, right, on="key", how="left")`
+    - 対応のない行の数 = 右側の「本来は欠損しない列」の欠損数
+    - `age` のように元から欠損がある列で判定すると、件数が多めに出てしまう
+  mistakes: |
+    - `how="left"` を忘れる → inner join になり、対応のない行は消えて 0 件になる
+    - `merged.isna().sum().sum()` → 全列の欠損の合計で、件数にならない

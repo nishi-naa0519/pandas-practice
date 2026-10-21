@@ -1,0 +1,22 @@
+purpose: カテゴリ列にどんな値が何件あるかを、すぐ確認できるようにします。
+statement: '`payment_method` の**値ごとの件数**を、多い順に並んだ Series で返してください。'
+data:
+- orders.csv
+setup: df = pd.read_csv("data/orders.csv")
+signature: 'def solve(df: pd.DataFrame):'
+run: solve(df)
+hints:
+- 値ごとの件数を数えるメソッドは Series にあります
+- df["payment_method"].value_counts()
+solution:
+  code: |
+    def solve(df: pd.DataFrame):
+        return df["payment_method"].value_counts()
+  explanation: '`value_counts()` は値ごとの件数を数え、**多い順**に並べて返します。欠損は数えません。'
+  points: |
+    - カテゴリの分布: `df["col"].value_counts()`
+    - 割合で見たいときは `value_counts(normalize=True)`(次の問題)
+    - 欠損も1つの値として数えたいときは `value_counts(dropna=False)`
+  mistakes: |
+    - `df.value_counts()` → 全列の組み合わせの件数になる。列を選んでから使う
+    - `df.groupby("payment_method").count()` → 列ごとの非欠損数が並ぶ表になり、見づらい

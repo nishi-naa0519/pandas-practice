@@ -1,0 +1,31 @@
+purpose: 「カテゴリ別に平均を見たい」と思ったら、すぐ groupby を書けるようにします。
+statement: '`category` ごとの `price` の**平均**を Series で返してください(index がカテゴリ)。'
+data:
+- orders.csv
+setup: df = pd.read_csv("data/orders.csv")
+preview: df.head()
+signature: 'def solve(df: pd.DataFrame):'
+run: solve(df)
+hints:
+- df.groupby("グループの列")["集計する列"].集計関数()
+- df.groupby("category")["price"].mean()
+solution:
+  code: |
+    def solve(df: pd.DataFrame):
+        return df.groupby("category")["price"].mean()
+  explanation: |
+    `groupby` は「**どの列でグループ分けし** → **どの列を** → **どう集計するか**」の順に書きます。
+
+    ```python
+    df.groupby("category")["price"].mean()
+    #        ↑グループの列   ↑集計する列  ↑集計方法
+    ```
+
+    欠損は除いて平均されます。
+  points: |
+    - 基本形: `df.groupby("cat")["val"].mean()`
+    - `.mean()` を `.sum()` `.median()` `.max()` `.count()` に変えるだけで他の集計になる
+    - 結果の index はグループの値(アルファベット順に並ぶ)
+  mistakes: |
+    - `df.groupby("category").mean()` → 全部の数値列の平均になり、文字列列があるとエラーになる。集計する列を選ぶ
+    - `df.groupby(["price"])["category"]...` → グループの列と集計する列が逆

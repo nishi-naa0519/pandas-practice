@@ -1,0 +1,28 @@
+purpose: 「値が大きい順に上位N件」をすぐ見られるようにします。外れ値の確認にもよく使います。
+statement: '`revenue` が大きい順に並べ、**上位5行**を返してください(列はすべて残す)。'
+data:
+- store_sales.csv
+setup: df = pd.read_csv("data/store_sales.csv")
+preview: df.head()
+signature: 'def solve(df: pd.DataFrame):'
+run: solve(df)
+hints:
+- df.sort_values("列名") で並び替えられます
+- 大きい順は ascending=False。上位5行は .head(5)
+solution:
+  code: |
+    def solve(df: pd.DataFrame):
+        return df.sort_values("revenue", ascending=False).head(5)
+  explanation: |
+    1. `sort_values("revenue", ascending=False)` で revenue の大きい順に並べる
+    2. `.head(5)` で上から5行を取る
+
+    欠損(NaN)は並び替えると最後に回るので、上位には出てきません。
+  points: |
+    - 上位N件: `df.sort_values("col", ascending=False).head(n)`
+    - 下位N件は `ascending=True`(デフォルト)のまま `.head(n)`
+    - 異常に大きい値・小さい値を探すときにも、まず並べて見る
+  mistakes: |
+    - `ascending=False` を忘れて小さい順になる
+    - `df.sort_values("revenue", ascending=False)` だけで代入しない → `df` 自体は並び替わらない(結果を使う)
+    - `df["revenue"].sort_values(...)` → revenue 列だけになり、他の列が見えない

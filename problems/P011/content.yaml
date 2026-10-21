@@ -1,0 +1,24 @@
+purpose: 「この値か、この値」という条件を `isin` で短く書けるようにします。
+statement: '`prefecture` が `"Tokyo"` か `"Osaka"` の顧客を抽出した DataFrame を返してください。'
+data:
+- customers.csv
+setup: df = pd.read_csv("data/customers.csv")
+preview: df["prefecture"].head()
+signature: 'def solve(df: pd.DataFrame):'
+run: solve(df)
+hints:
+- 複数の値のどれかに一致するかは .isin(リスト) で判定できます
+- df[df["prefecture"].isin(["Tokyo", "Osaka"])]
+solution:
+  code: |
+    def solve(df: pd.DataFrame):
+        return df[df["prefecture"].isin(["Tokyo", "Osaka"])]
+  explanation: |
+    `df["prefecture"].isin(["Tokyo", "Osaka"])` は、値がリストのどれかに一致すれば True になります。
+    欠損(NaN)の行は False になります。
+  points: |
+    - 複数の値との一致は `.isin([...])`。`==` を `|` で並べるより短く、値が増えても楽
+    - 否定(リストのどれでもない)は `~df["col"].isin([...])`
+  mistakes: |
+    - `.isin("Tokyo", "Osaka")` → 値はリストで1つの引数として渡す
+    - `df["prefecture"] == ["Tokyo", "Osaka"]` → エラー

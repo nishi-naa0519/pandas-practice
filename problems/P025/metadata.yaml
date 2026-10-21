@@ -1,0 +1,22 @@
+id: P025
+title: 2つのカテゴリの組み合わせで集計する
+category: E
+problem_type: coding
+difficulty: 2
+learning_level: 2
+primary_tags:
+- method:groupby
+- method:reset_index
+secondary_tags:
+- method:sum
+- task:group_comparison
+curriculum_items:
+- groupby_multi_key
+estimated_minutes: 4
+prerequisites:
+- P023
+datasets:
+- store_sales.csv
+source_type: synthetic
+variant_of: null
+created: '2026-10-22'

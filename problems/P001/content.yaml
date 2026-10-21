@@ -1,0 +1,26 @@
+purpose: データを受け取ったら最初にやる「読み込んで先頭を見る」を、何も見ずに書けるようにします。
+statement: 引数 `path` で渡されたCSVファイルを読み込み、**先頭3行**を DataFrame で返してください。
+data:
+- orders.csv
+setup: path = "data/orders.csv"
+signature: 'def solve(path: str):'
+run: solve(path)
+hints:
+- CSVの読み込みは pd.read_csv(パス)
+- 先頭n行は df.head(n)
+solution:
+  code: |
+    def solve(path: str):
+        df = pd.read_csv(path)
+        return df.head(3)
+  explanation: |
+    - `pd.read_csv(path)` でCSVを DataFrame として読み込みます。
+    - `df.head(3)` で先頭3行を取り出します。引数を省略すると5行です。
+  points: |
+    - 読み込みは `pd.read_csv("ファイルパス")`
+    - 中身の確認は `df.head()`(末尾は `df.tail()`)
+    - Notebook ではセルの最後の式が自動で表示されるので、普段は `df.head()` と書くだけでOK
+  mistakes: |
+    - `df.head` と括弧を忘れる → メソッドそのものが表示されるだけで、データは出ません
+    - `df.head[3]` と角括弧にする → エラー。メソッドの引数は `()` で渡します
+    - 行数が3行未満のデータでも `head(3)` はエラーにならず、ある分だけ返します

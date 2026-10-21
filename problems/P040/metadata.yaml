@@ -1,0 +1,24 @@
+id: P040
+title: ログの期間が何日分か確認する
+category: H
+problem_type: coding
+difficulty: 2
+learning_level: 2
+primary_tags:
+- method:to_datetime
+- task:period_check
+secondary_tags:
+- method:min
+- method:max
+- concept:datetime
+curriculum_items:
+- to_datetime
+- eda_period
+estimated_minutes: 4
+prerequisites:
+- P031
+datasets:
+- web_logs.csv
+source_type: synthetic
+variant_of: null
+created: '2026-10-22'

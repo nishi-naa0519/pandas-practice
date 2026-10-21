@@ -1,0 +1,26 @@
+purpose: 2つの条件を組み合わせた抽出を、括弧の付け忘れなく書けるようにします。
+statement: '`category` が `"book"` **かつ** `quantity` が **2以上** の注文を抽出した DataFrame を返してください。'
+data:
+- orders.csv
+setup: df = pd.read_csv("data/orders.csv")
+preview: df.head()
+signature: 'def solve(df: pd.DataFrame):'
+run: solve(df)
+hints:
+- 「かつ」は & を使います(and は使えません)
+- '各条件を () で囲みます: (条件1) & (条件2)'
+solution:
+  code: |
+    def solve(df: pd.DataFrame):
+        return df[(df["category"] == "book") & (df["quantity"] >= 2)]
+  explanation: |
+    - それぞれの条件で True/False の Series を作り、`&` で「両方 True」の行を残します
+    - `&` は比較演算子より先に計算されるため、**各条件を `()` で囲む必要があります**
+  points: |
+    - かつ: `&` / または: `|` / 否定: `~`
+    - 条件は必ず `()` で囲む: `df[(条件1) & (条件2)]`
+    - 長くなるときは `is_book = df["category"] == "book"` のように変数に分けてもよい
+  mistakes: |
+    - `and` を使う → `ValueError: The truth value of a Series is ambiguous`
+    - 括弧を忘れる: `df["category"] == "book" & df["quantity"] >= 2` → エラーまたは意図しない結果
+    - 文字列の比較で `"Book"` のように大文字小文字を間違える

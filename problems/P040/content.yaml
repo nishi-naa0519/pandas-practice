@@ -1,0 +1,32 @@
+purpose: 日時列の最小・最大から、データがどの期間のものかを確認できるようにします。
+statement: |
+  `timestamp` 列(文字列)を日時型に変換し、**最初のログと最後のログの差が何日か**を整数で返してください。
+
+  日数は差(Timedelta)の `.days` を使ってください。
+  例: `2025-03-01 10:00` と `2025-03-31 09:00` の差は 29日23時間 なので `29`。
+data:
+- web_logs.csv
+setup: df = pd.read_csv("data/web_logs.csv")
+preview: df["timestamp"].head()
+signature: 'def solve(df: pd.DataFrame):'
+run: solve(df)
+hints:
+- pd.to_datetime(列) で日時型に
+- 日時型の列も .min() / .max() が使えます
+- 日時どうしの引き算は Timedelta になり、.days で日数が取れます
+solution:
+  code: |
+    def solve(df: pd.DataFrame):
+        ts = pd.to_datetime(df["timestamp"])
+        return (ts.max() - ts.min()).days
+  explanation: |
+    1. `pd.to_datetime()` で日時型にする
+    2. `.max()` と `.min()` で最後と最初の日時を取る(並び順に関係なく正しく取れる)
+    3. 引き算すると Timedelta(期間)になり、`.days` で日数(切り捨て)が取れる
+  points: |
+    - 期間の確認: `ts.min(), ts.max()` を見るだけでも十分。新しいデータを受け取ったら必ず見る
+    - 日時の差は Timedelta。`.days` で日数
+    - 文字列のままでも min / max は動くが、**日付の形式がそろっていないと誤る**。変換してから比べる
+  mistakes: |
+    - `df["timestamp"].iloc[-1] - df["timestamp"].iloc[0]` → 並び順に依存する。ソートされていないと誤る
+    - `.days()` → 括弧は付けない

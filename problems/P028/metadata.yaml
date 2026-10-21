@@ -1,0 +1,21 @@
+id: P028
+title: 既存の列から新しい列を作る
+category: F
+problem_type: coding
+difficulty: 1
+learning_level: 1
+primary_tags:
+- syntax:new_column
+secondary_tags:
+- syntax:column_arithmetic
+- task:feature_creation
+curriculum_items:
+- new_column
+estimated_minutes: 2
+prerequisites:
+- P007
+datasets:
+- orders.csv
+source_type: synthetic
+variant_of: null
+created: '2026-10-22'

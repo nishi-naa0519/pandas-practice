@@ -1,0 +1,21 @@
+id: P001
+title: CSVを読み込んで先頭を見る
+category: A
+problem_type: coding
+difficulty: 1
+learning_level: 1
+primary_tags:
+- method:read_csv
+- method:head
+secondary_tags:
+- task:data_overview
+curriculum_items:
+- read_csv
+- head_tail_sample
+estimated_minutes: 2
+prerequisites: []
+datasets:
+- orders.csv
+source_type: synthetic
+variant_of: null
+created: '2026-10-22'

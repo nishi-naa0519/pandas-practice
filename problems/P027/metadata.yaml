@@ -1,0 +1,25 @@
+id: P027
+title: デバイスによってコンバージョン率に差はあるか
+category: H
+problem_type: exploration
+difficulty: 3
+learning_level: 3
+primary_tags:
+- task:group_comparison
+secondary_tags:
+- method:groupby
+- method:agg
+- method:value_counts
+- concept:sample_size
+- task:anomaly_check
+curriculum_items:
+- eda_group_target
+- groupby_agg_simple
+estimated_minutes: 8
+prerequisites:
+- P026
+datasets:
+- web_logs.csv
+source_type: synthetic
+variant_of: null
+created: '2026-10-22'

@@ -1,0 +1,21 @@
+id: P005
+title: 要約統計量を見る
+category: A
+problem_type: coding
+difficulty: 1
+learning_level: 1
+primary_tags:
+- method:describe
+secondary_tags:
+- task:summary_stats
+- task:anomaly_check
+curriculum_items:
+- describe
+estimated_minutes: 3
+prerequisites:
+- P001
+datasets:
+- store_sales.csv
+source_type: synthetic
+variant_of: null
+created: '2026-10-22'

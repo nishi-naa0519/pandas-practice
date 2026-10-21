@@ -1,0 +1,27 @@
+id: P044
+title: モデルから除外する候補の列を見つける
+category: H
+problem_type: coding
+difficulty: 3
+learning_level: 3
+primary_tags:
+- task:feature_screening
+secondary_tags:
+- method:isna
+- method:nunique
+- syntax:multiple_conditions
+- task:missing_check
+- task:cardinality_check
+curriculum_items:
+- eda_feature_screening
+- isna_rate
+- nunique
+estimated_minutes: 6
+prerequisites:
+- P015
+- P039
+datasets:
+- churn_train.csv
+source_type: synthetic
+variant_of: null
+created: '2026-10-22'

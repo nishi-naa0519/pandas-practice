@@ -1,0 +1,50 @@
+purpose: 目的変数と特徴量の関係を、groupby の組み合わせだけでざっと確認できるようにします。
+statement: |
+  解約予測の学習データ `churn_train.csv` について、**解約(`churn` = 1)と関係のありそうな特徴量**を探してください。
+  モデルを作る前の当たりを付けるのが目的なので、細かい統計検定は不要です。
+questions: |
+  1. 全体の解約率はどれくらいか
+  2. 解約率が大きく違うカテゴリ列はどれか
+  3. 解約した人としなかった人で、平均が大きく違う数値列はどれか
+  4. 差があるように見えても、信用しないほうがよい結果はあるか
+data:
+- churn_train.csv
+setup: df = pd.read_csv("data/churn_train.csv")
+hints:
+- 最初に重複行と churn の欠損を除いておきましょう(P034)
+- カテゴリ列は df.groupby("plan")["churn"].agg(["mean", "count"])
+- 数値列は逆向きに df.groupby("churn")["tenure_months"].mean() のように比べると早いです
+solution:
+  checklist: |
+    1. 重複行・目的変数の欠損を除く
+    2. 全体の解約率(ベースライン)
+    3. カテゴリ列ごとの解約率と件数: `groupby("cat")["churn"].agg(["mean", "count"])`
+    4. 数値列は churn ごとの平均: `groupby("churn")[数値列のリスト].mean()`
+    5. 件数の少ないグループは結論から外す
+  code: |
+    df = df.drop_duplicates().dropna(subset=["churn"])
+    df["churn"].mean()
+    # %%
+    df.groupby("plan")["churn"].agg(["mean", "count"])
+    # %%
+    df.groupby("region")["churn"].agg(["mean", "count"])
+    # %%
+    df.groupby("gender")["churn"].agg(["mean", "count"])
+    # %%
+    df.groupby("n_support_calls")["churn"].agg(["mean", "count"])
+    # %%
+    df.groupby("churn")[["tenure_months", "n_support_calls", "age", "avg_watch_hours", "last_login_days", "monthly_fee"]].mean()
+  observations: |
+    1. 重複と欠損を除くと 595 行。全体の解約率は **約20.7%**。これより高いか低いかで見る
+    2. **`plan`**: basic 25.6% / standard 17.6% / premium 8.5%。上位プランほど解約しにくい
+    3. **`n_support_calls`**: 0回 8.3% → 2回 26.6% → 4回 45.8% → 5回 61.5% と、問い合わせが多いほど解約率が高い
+    4. **`tenure_months`**: 解約者の平均 25.0 か月 vs 継続者 38.7 か月。利用期間が短い人ほど解約しやすい
+    5. `age`, `avg_watch_hours`, `last_login_days`, `gender` はほとんど差がない
+    6. 注意が必要な結果
+       - `n_support_calls` = 6 は解約率 100% だが **3件しかない**
+       - `region` は 14.6%〜28.6% とばらつくが、Shikoku(21件)、Chugoku(23件)など件数が少なく、偶然の範囲かもしれない
+  points: |
+    - カテゴリ × 目的変数: `groupby("cat")["target"].agg(["mean", "count"])`
+    - 数値 × 目的変数: `groupby("target")[数値列].mean()` で、目的変数のクラスごとの平均を比べる
+    - 全体の率(ベースライン)と比べて判断する
+    - **件数の少ないグループの極端な値に飛びつかない**

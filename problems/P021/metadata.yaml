@@ -1,0 +1,22 @@
+id: P021
+title: 大きい順に上位を見る
+category: D
+problem_type: coding
+difficulty: 2
+learning_level: 2
+primary_tags:
+- method:sort_values
+secondary_tags:
+- method:head
+- task:ranking
+- syntax:method_chaining
+curriculum_items:
+- sort_values
+estimated_minutes: 3
+prerequisites:
+- P001
+datasets:
+- store_sales.csv
+source_type: synthetic
+variant_of: null
+created: '2026-10-22'

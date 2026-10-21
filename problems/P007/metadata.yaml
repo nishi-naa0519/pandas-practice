@@ -1,0 +1,20 @@
+id: P007
+title: 必要な列だけを見る
+category: B
+problem_type: coding
+difficulty: 1
+learning_level: 1
+primary_tags:
+- syntax:column_selection
+secondary_tags:
+- task:data_overview
+curriculum_items:
+- column_selection
+estimated_minutes: 2
+prerequisites:
+- P003
+datasets:
+- customers.csv
+source_type: synthetic
+variant_of: null
+created: '2026-10-22'

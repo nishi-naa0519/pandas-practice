@@ -1,0 +1,22 @@
+purpose: どんな列があるかをすぐ確認できるようにします。
+statement: '`df` の**列名の一覧**を返してください(リストでも `df.columns` そのままでも構いません)。'
+data:
+- customers.csv
+setup: df = pd.read_csv("data/customers.csv")
+signature: 'def solve(df: pd.DataFrame):'
+run: solve(df)
+hints:
+- 列名の一覧は DataFrame の属性で取れます
+- df.columns
+solution:
+  code: |
+    def solve(df: pd.DataFrame):
+        return df.columns
+  explanation: '`df.columns` は列名の一覧(Index)です。リストが欲しいときは `list(df.columns)` にします。'
+  points: |
+    - 列名の確認は `df.columns`
+    - 列名が多くて表示が省略されるときは `list(df.columns)` にすると全部見える
+    - 列名に空白や大文字小文字の違いがないかもここで確認する
+  mistakes: |
+    - `df.columns()` → エラー(属性なので括弧不要)
+    - `df.column` → 綴り間違い(複数形の `columns`)

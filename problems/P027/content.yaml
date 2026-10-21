@@ -1,0 +1,48 @@
+purpose: グループ間の差を、件数やおかしなデータに注意しながら確認する流れを身につけます。
+statement: |
+  Webサイトのアクセスログ `web_logs.csv` があります。`converted` は購入したら 1 です。
+
+  「**デバイス(`device`)によってコンバージョン率(購入率)に差があるか**」を調べてください。
+  結論を出す前に、集計結果を信用してよいかも確認しましょう。
+questions: |
+  1. デバイスは何種類あり、それぞれ何件か
+  2. デバイスごとのコンバージョン率はどれくらいか
+  3. 集計から除外したほうがよいログはあるか。それはなぜか
+  4. 結論に注意が必要なグループはあるか
+data:
+- web_logs.csv
+setup: df = pd.read_csv("data/web_logs.csv")
+hints:
+- まず device の値と件数を value_counts で見ましょう
+- df.groupby("device")["converted"].agg(["mean", "count"]) で率と件数を同時に見られます
+- duration_sec をデバイス別に見ると、人間ではないアクセスが分かります
+solution:
+  checklist: |
+    1. グループの種類と件数(`value_counts`)
+    2. グループごとの率と件数(`groupby` + `agg(["mean", "count"])`)
+    3. 人間以外のアクセスなど、集計対象にすべきでない行がないか(滞在時間などの他の列も見る)
+    4. 除外後にもう一度集計
+  code: |
+    df["device"].value_counts()
+    # %%
+    df.groupby("device")["converted"].agg(["mean", "count"])
+    # %%
+    df.groupby("device")["duration_sec"].mean()
+    # %%
+    human = df[~df["device"].isin(["bot", "crawler"])]
+    human.groupby("device")["converted"].agg(["mean", "count"])
+    # %%
+    # 全体のコンバージョン率(除外前と後)
+    df["converted"].mean(), human["converted"].mean()
+  observations: |
+    1. device は mobile(224件)・pc(173)・tablet(35)・**bot(48)・crawler(20)** の5種類
+    2. コンバージョン率は pc 約9.2%、mobile 約8.0%、tablet 約5.7%、bot と crawler は 0%
+    3. **bot / crawler は人間のアクセスではない**。滞在時間の平均が約1秒しかない。
+       含めたままだと全体のコンバージョン率が 7.2% → 除外すると 8.3% と、実態より低く見える
+    4. **tablet は35件しかない**。購入は2件だけなので、1件増えるだけで率が大きく変わる。
+       「tablet は購入率が低い」と結論するには件数が足りない
+    5. pc と mobile の差(約1ポイント)も、この件数では偶然の範囲かもしれない。言い切らないこと
+  points: |
+    - グループ比較は **率と件数をセットで**: `agg(["mean", "count"])`
+    - 集計の前に「そもそも集計対象にすべきでない行」がないか考える
+    - 除外は `~df["col"].isin([...])` で書ける

@@ -1,0 +1,33 @@
+purpose: 学習データの基本的なクリーニング(重複除去・目的変数が欠損した行の除去)ができるようにします。
+statement: |
+  学習データ `df` から、
+
+  1. 完全に重複した行(2回目以降)を削除し
+  2. 目的変数 `churn` が欠損している行を削除した
+
+  DataFrame を返してください。**`churn` 以外の列の欠損は残してください**(後で埋める予定のため)。
+data:
+- churn_train.csv
+setup: df = pd.read_csv("data/churn_train.csv")
+preview: df.shape
+signature: 'def solve(df: pd.DataFrame):'
+run: solve(df)
+hints:
+- 重複行の削除は .drop_duplicates()
+- 特定の列が欠損している行だけ消すには dropna(subset=[列名])
+solution:
+  code: |
+    def solve(df: pd.DataFrame):
+        df = df.drop_duplicates()
+        df = df.dropna(subset=["churn"])
+        return df
+  explanation: |
+    - `drop_duplicates()` は完全に重複した行の2回目以降を削除します
+    - `dropna(subset=["churn"])` は churn が欠損している行だけを削除します
+  points: |
+    - 重複行の削除: `df.drop_duplicates()`
+    - 目的変数が欠損した行の削除: `df.dropna(subset=["target"])`
+    - `subset` を付けない `dropna()` は**どこか1列でも欠損があれば削除**する。特徴量の欠損が多いデータではほとんどの行が消えることも
+  mistakes: |
+    - `df.dropna()` → 他の列の欠損まで削除してしまう(このデータでは `coupon_code` がほとんど欠損しているため、604 行が 51 行まで減る)
+    - `df.drop_duplicates()` だけで代入しない → df は変わらない

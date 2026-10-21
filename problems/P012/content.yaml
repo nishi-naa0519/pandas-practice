@@ -1,0 +1,22 @@
+purpose: 行の条件と見たい列を、`loc` で一度に指定できるようにします。
+statement: '`converted` が 1(購入した)のログについて、`session_id`, `page`, `duration_sec` の3列だけを返してください。'
+data:
+- web_logs.csv
+setup: df = pd.read_csv("data/web_logs.csv")
+preview: df.head()
+signature: 'def solve(df: pd.DataFrame):'
+run: solve(df)
+hints:
+- df.loc[行の条件, 列のリスト] で行と列を同時に指定できます
+- df.loc[df["converted"] == 1, ["session_id", ...]]
+solution:
+  code: |
+    def solve(df: pd.DataFrame):
+        return df.loc[df["converted"] == 1, ["session_id", "page", "duration_sec"]]
+  explanation: '`df.loc[行, 列]` の形で、行には条件(True/False の Series)、列には列名のリストを渡します。'
+  points: |
+    - `df.loc[条件, ["列1", "列2"]]` で「条件の行の、この列だけ」
+    - 列を全部残すなら `df[条件]` で十分
+  mistakes: |
+    - `df.loc[条件, "session_id", "page"]` → 列はリストにまとめる
+    - `df.iloc[条件, ...]` → iloc は位置指定用。条件や列名には loc を使う

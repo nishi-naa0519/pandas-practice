@@ -1,0 +1,26 @@
+purpose: 「この条件に合う行だけ見たい」をすぐ書けるようにします。
+statement: '`price` が **3000以上** の注文だけを抽出した DataFrame を返してください(列はすべて残す)。'
+data:
+- orders.csv
+setup: df = pd.read_csv("data/orders.csv")
+preview: df.head()
+signature: 'def solve(df: pd.DataFrame):'
+run: solve(df)
+hints:
+- df["price"] >= 3000 は True/False の Series になります
+- その True/False を df[...] に渡すと True の行だけ残ります
+solution:
+  code: |
+    def solve(df: pd.DataFrame):
+        return df[df["price"] >= 3000]
+  explanation: |
+    1. `df["price"] >= 3000` で、行ごとに True/False の Series を作ります
+    2. それを `df[...]` に渡すと、True の行だけが残ります(boolean indexing)
+  points: |
+    - 条件抽出の基本形は `df[df["col"] 比較 値]`
+    - 比較演算子: `==`, `!=`, `>`, `>=`, `<`, `<=`
+    - 抽出後も元の index(行ラベル)が残る。番号が飛んでいても正常
+    - 件数だけ知りたいときは `(df["price"] >= 3000).sum()`
+  mistakes: |
+    - `df["price" >= 3000]` → 括弧の位置が違う
+    - `>`(より大きい)と `>=`(以上)の取り違え

@@ -1,0 +1,20 @@
+id: P011
+title: 複数の値のどれかに一致する行
+category: B
+problem_type: coding
+difficulty: 1
+learning_level: 1
+primary_tags:
+- method:isin
+secondary_tags:
+- syntax:boolean_indexing
+curriculum_items:
+- isin
+estimated_minutes: 2
+prerequisites:
+- P010
+datasets:
+- customers.csv
+source_type: synthetic
+variant_of: null
+created: '2026-10-22'

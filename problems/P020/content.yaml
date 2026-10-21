@@ -1,0 +1,24 @@
+purpose: 分類問題で、目的変数のクラスがどれくらい偏っているかをすぐ確認できるようにします。
+statement: 解約予測データの目的変数 `churn`(1 = 解約)について、**クラスごとの割合**を Series で返してください。
+data:
+- churn_train.csv
+setup: df = pd.read_csv("data/churn_train.csv")
+signature: 'def solve(df: pd.DataFrame):'
+run: solve(df)
+hints:
+- value_counts() に引数を1つ足すと割合になります
+- value_counts(normalize=True)
+solution:
+  code: |
+    def solve(df: pd.DataFrame):
+        return df["churn"].value_counts(normalize=True)
+  explanation: |
+    `normalize=True` を付けると、件数ではなく**割合**(合計 1)になります。
+    このデータでは churn=1 が約2割で、クラスが偏っています。
+  points: |
+    - クラス比率: `df["target"].value_counts(normalize=True)`
+    - 偏りが大きいと、accuracy が高くても役に立たないモデルになりうる(全部 0 と予測しても約8割正解)
+    - 実データの `churn` には欠損が少しある。`value_counts(dropna=False)` で欠損も含めて確認しておくとよい
+  mistakes: |
+    - `df["churn"].mean()` → 0/1 なら churn=1 の割合は出るが、クラスが3つ以上だと使えない
+    - `normalize` の綴り間違い(`normalized` など)

@@ -1,0 +1,21 @@
+purpose: 「先頭から何行・左から何列」という位置での切り出しを `iloc` で書けるようにします。
+statement: '`df` の **先頭5行・左から3列** を返してください。'
+data:
+- web_logs.csv
+setup: df = pd.read_csv("data/web_logs.csv")
+signature: 'def solve(df: pd.DataFrame):'
+run: solve(df)
+hints:
+- 位置で指定するときは iloc を使います
+- df.iloc[行の範囲, 列の範囲]。:5 は「0〜4番目」
+solution:
+  code: |
+    def solve(df: pd.DataFrame):
+        return df.iloc[:5, :3]
+  explanation: '`df.iloc[行, 列]` は位置(0始まりの番号)で指定します。`:5` は 0〜4 番目で、**終わりの位置は含みません**。'
+  points: |
+    - `loc` はラベル(条件・列名)、`iloc` は位置(番号)
+    - `df.iloc[0]` で1行目、`df.iloc[-1]` で最後の行を Series で見られる
+  mistakes: |
+    - `df.iloc[:5, ["session_id", ...]]` → iloc に列名は使えない
+    - `df.loc[:5, :3]` → loc はラベル指定なので意味が変わる

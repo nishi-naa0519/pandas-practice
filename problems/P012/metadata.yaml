@@ -1,0 +1,22 @@
+id: P012
+title: 条件で絞りつつ列も選ぶ(loc)
+category: B
+problem_type: coding
+difficulty: 2
+learning_level: 2
+primary_tags:
+- method:loc
+secondary_tags:
+- syntax:boolean_indexing
+- syntax:column_selection
+curriculum_items:
+- loc
+estimated_minutes: 3
+prerequisites:
+- P008
+- P007
+datasets:
+- web_logs.csv
+source_type: synthetic
+variant_of: null
+created: '2026-10-22'

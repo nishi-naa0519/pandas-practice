@@ -1,0 +1,26 @@
+purpose: 集計の前に、完全に同じ行が混ざっていないかを確認できるようにします。
+statement: |
+  `df` に含まれる**完全に重複した行の数**を返してください。
+  同じ行が3回出てくる場合、重複は2行と数えます(1回目は重複ではない)。
+data:
+- customers.csv
+setup: df = pd.read_csv("data/customers.csv")
+signature: 'def solve(df: pd.DataFrame):'
+run: solve(df)
+hints:
+- df.duplicated() は「前に同じ行があれば True」の Series です
+- True の件数は .sum()
+solution:
+  code: |
+    def solve(df: pd.DataFrame):
+        return df.duplicated().sum()
+  explanation: |
+    `df.duplicated()` は、すべての列の値が**それより前の行と完全に一致する行**を True にします。
+    1回目の出現は False なので、`.sum()` で「2回目以降の行の数」になります。
+  points: |
+    - 重複行の数: `df.duplicated().sum()`
+    - ID列だけの重複: `df["customer_id"].duplicated().sum()`(他の列が違っていても数える)
+    - 重複行の中身を見る: `df[df.duplicated()]`
+  mistakes: |
+    - 一部の列だけ同じ行は、`df.duplicated()` では重複にならない
+    - `len(df) - df.nunique()` などは別物

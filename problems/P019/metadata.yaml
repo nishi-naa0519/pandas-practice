@@ -1,0 +1,20 @@
+id: P019
+title: カテゴリごとの件数を見る
+category: C
+problem_type: coding
+difficulty: 1
+learning_level: 1
+primary_tags:
+- method:value_counts
+- task:category_distribution
+secondary_tags: []
+curriculum_items:
+- value_counts
+estimated_minutes: 2
+prerequisites:
+- P007
+datasets:
+- orders.csv
+source_type: synthetic
+variant_of: null
+created: '2026-10-22'

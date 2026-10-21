@@ -1,0 +1,65 @@
+purpose: 指標の定義から「ありえない値」を考え、条件抽出で見つけられるようにします。
+statement: |
+  広告の日次配信ログ `ad_logs.csv` があります。キャンペーンごとのクリック率(CTR = clicks / impressions)を比較したいと考えています。
+
+  比較の前に、**ログに異常な値や集計を狂わせるデータがないか**を調べてください。
+questions: |
+  1. 期間はいつからいつまでか。日付 × 広告の行数は想定どおりか
+  2. 指標の関係として「ありえない」行はあるか(例: クリック数と表示回数の関係)
+  3. 負の値など、ありえない値はあるか
+  4. 重複や表記ゆれはあるか
+  5. 異常な行を除く前と後で、キャンペーンごとの CTR はどう変わるか
+data:
+- ad_logs.csv
+setup: df = pd.read_csv("data/ad_logs.csv")
+hints:
+- clicks は impressions を超えられません。df[df["clicks"] > df["impressions"]]
+- describe() で min が負の列がないか見ましょう
+- 8広告 × 31日 = 248行が想定です。行数と比べてみましょう
+- CTR は行ごとの平均ではなく、groupby("campaign")[["clicks", "impressions"]].sum() してから割ると正確です
+solution:
+  checklist: |
+    1. 期間と行数: `date` の min / max / nunique、広告数 × 日数と行数を比べる
+    2. 指標間の矛盾: `clicks > impressions`、`conversions > clicks`
+    3. ありえない値: `describe()` の min / max、負の値
+    4. 重複: `duplicated().sum()`
+    5. カテゴリの表記ゆれ: `value_counts()`
+    6. 異常値を除く前後で集計を比べる
+  code: |
+    df.shape, df["date"].min(), df["date"].max(), df["date"].nunique(), df["ad_id"].nunique()
+    # %%
+    df.describe()
+    # %%
+    df[df["clicks"] > df["impressions"]]
+    # %%
+    df[df["cost"] < 0]
+    # %%
+    df[df["impressions"] == 0]
+    # %%
+    df.duplicated().sum()
+    # %%
+    df["campaign"].value_counts()
+    # %%
+    # 除外前の CTR
+    raw = df.groupby("campaign")[["clicks", "impressions"]].sum()
+    raw["clicks"] / raw["impressions"]
+    # %%
+    # 重複・矛盾・負の値を除き、表記ゆれをそろえてから CTR
+    clean = df.drop_duplicates()
+    clean = clean[(clean["clicks"] <= clean["impressions"]) & (clean["cost"] >= 0)]
+    clean["campaign"] = clean["campaign"].str.lower()
+    agg = clean.groupby("campaign")[["clicks", "impressions"]].sum()
+    agg["clicks"] / agg["impressions"]
+  observations: |
+    1. 期間は 2025-05-01 〜 05-31(31日)、広告は8種類。想定は 248 行だが **251 行** ある → **完全重複が3行**
+    2. **clicks > impressions の行が2行**(ad 10006 の 05-05、ad 10007 の 05-19)。clicks の max が 5346 と describe でも目立つ
+    3. **cost が負(-4200)の行が1行**(ad 10002 の 05-26)
+    4. impressions が 0 の日が1行(ad 10007 の 05-15)。配信停止日と思われる。行ごとに CTR を計算すると 0/0 で NaN になる
+    5. `campaign` に **`"Brand"` と `"brand"` の表記ゆれ**(4行)
+    6. **retarget の CTR は、除外前 約6.3% → 除外後 約3.5%**。異常な2行だけで CTR がほぼ倍に見えていた。
+       spring_sale(約2.0%)、brand(約0.8%)はほぼ変わらない
+  points: |
+    - 「ありえない値」は**指標の定義から考える**: clicks ≤ impressions、cost ≥ 0 など
+    - 見つけたら `df[条件]` で該当行を表示して中身を見る
+    - **想定行数(日数 × 対象数)と実際の行数を比べる**と、重複や欠けに気づける
+    - 少数の異常値が集計結果を大きく変えることがある。除外前後で比べる

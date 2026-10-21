@@ -1,0 +1,33 @@
+purpose: 文字列の日付を日時型に変換し、年や月を取り出せるようにします。
+statement: |
+  1. `order_date` を**日時型に変換**して、`order_date` 列に代入し直してください
+  2. 年を表す列 `year` と、月を表す列 `month` を追加してください
+
+  **`df` 全体**を返してください。
+data:
+- orders.csv
+setup: df = pd.read_csv("data/orders.csv")
+preview: df.dtypes
+signature: 'def solve(df: pd.DataFrame):'
+run: solve(df)
+hints:
+- 文字列 → 日時型は pd.to_datetime(列)
+- 日時型の列からは .dt.year や .dt.month で年・月を取り出せます
+solution:
+  code: |
+    def solve(df: pd.DataFrame):
+        df["order_date"] = pd.to_datetime(df["order_date"])
+        df["year"] = df["order_date"].dt.year
+        df["month"] = df["order_date"].dt.month
+        return df
+  explanation: |
+    1. `read_csv` は日付を文字列のまま読み込むので、`pd.to_datetime()` で日時型にします
+    2. 日時型の列は `.dt.year`, `.dt.month`, `.dt.day` などで要素を取り出せます
+  points: |
+    - 変換: `df["date"] = pd.to_datetime(df["date"])`
+    - 取り出し: `.dt.year` / `.dt.month` / `.dt.day`(`.dt.dayofweek` で曜日 0=月曜)
+    - 変換後は `df["date"].min()` / `.max()` で期間も確認できる
+  mistakes: |
+    - 文字列のまま `.dt.year` → `AttributeError: Can only use .dt accessor with datetimelike values`
+    - `df["order_date"].dt.year()` → 括弧は付けない(属性)
+    - `df["order_date"].to_datetime()` → `pd.to_datetime(...)` は pd の関数

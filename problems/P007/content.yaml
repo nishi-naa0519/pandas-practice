@@ -1,0 +1,24 @@
+purpose: 列が多いデータから、見たい列だけを取り出せるようにします。
+statement: '`df` から `customer_id`, `age`, `plan` の3列だけを、**この順番で**取り出した DataFrame を返してください。'
+data:
+- customers.csv
+setup: df = pd.read_csv("data/customers.csv")
+preview: df.head()
+signature: 'def solve(df: pd.DataFrame):'
+run: solve(df)
+hints:
+- 複数の列は、列名のリストで選べます
+- df[["列1", "列2"]] (角括弧が二重になる)
+solution:
+  code: |
+    def solve(df: pd.DataFrame):
+        return df[["customer_id", "age", "plan"]]
+  explanation: |
+    `df[["customer_id", "age", "plan"]]` のように**列名のリスト**を渡すと、その列だけの DataFrame になります。
+    列の順番はリストの順番になります。
+  points: |
+    - 1列: `df["age"]` → Series
+    - 複数列: `df[["a", "b"]]` → DataFrame(外側の `[]` が選択、内側の `[]` がリスト)
+  mistakes: |
+    - `df["customer_id", "age"]` → `KeyError`(リストにしていない)
+    - `df[["customer_id"], ["age"]]` → リストは1つにまとめる

@@ -1,0 +1,33 @@
+purpose: 条件で絞った行について、必要な統計量を1つずつすぐ出せるようにします。
+statement: |
+  有料ユーザー(`is_paid` が 1)について、`sessions_7d` の **中央値** と **最大値** を
+  `(中央値, 最大値)` のタプルで返してください。
+data:
+- app_users.csv
+setup: df = pd.read_csv("data/app_users.csv")
+preview: df.head()
+signature: 'def solve(df: pd.DataFrame):'
+run: solve(df)
+hints:
+- まず有料ユーザーの行だけに絞ります
+- 絞った DataFrame の ["sessions_7d"] に .median() と .max()
+- return a, b と書くとタプルになります
+solution:
+  code: |
+    def solve(df: pd.DataFrame):
+        paid = df[df["is_paid"] == 1]
+        return paid["sessions_7d"].median(), paid["sessions_7d"].max()
+  explanation: |
+    1. `df[df["is_paid"] == 1]` で有料ユーザーに絞り、変数 `paid` に入れる
+    2. `paid["sessions_7d"]` に `.median()` と `.max()` を使う
+    3. `return a, b` でタプルとして返す
+
+    実データでは中央値 10、最大値 19 です。絞り込みを忘れて全ユーザーで計算すると、最大値は 999
+    (無料ユーザーに混ざっている異常値)になります。
+  points: |
+    - 基本統計: `.mean()` `.median()` `.std()` `.min()` `.max()` `.sum()` `.count()`
+    - 絞り込みが入るときは、一度変数に入れると読みやすい
+    - **平均より中央値**のほうが極端な値に引きずられにくい。両方見て差が大きければ外れ値を疑う
+  mistakes: |
+    - `df["sessions_7d"].median()` → 絞り込みを忘れて全ユーザーの値になる
+    - `df.median()` → 全列の中央値になり、文字列列でエラーになることもある

@@ -1,0 +1,22 @@
+id: P020
+title: 目的変数のクラス比率を確認する
+category: C
+problem_type: coding
+difficulty: 1
+learning_level: 1
+primary_tags:
+- method:value_counts
+- task:class_balance
+secondary_tags:
+- concept:class_imbalance
+curriculum_items:
+- value_counts_normalize
+- eda_target
+estimated_minutes: 2
+prerequisites:
+- P019
+datasets:
+- churn_train.csv
+source_type: synthetic
+variant_of: null
+created: '2026-10-22'

@@ -1,0 +1,69 @@
+purpose: モデルを作る前に train / test について確認すべきことを、自分で考えて一通り確認できるようにします。
+statement: |
+  解約予測コンペの `churn_train.csv` と `churn_test.csv` を受け取りました。目的変数は `churn` です。
+  モデルを作り始める前に、**train / test について確認すべきこと**を確認してください。
+questions: |
+  1. train / test の行数・列数。列の違いは
+  2. train と test で型が違う列はあるか。なぜ違うのか
+  3. 目的変数の分布(クラス比率)と欠損
+  4. `id` は一意か。重複行はあるか。train と test の id は重なっているか
+  5. カテゴリ列で、test にだけ現れる値はあるか
+  6. 型がおかしそうな列はあるか
+data:
+- churn_train.csv
+- churn_test.csv
+setup: |
+  train = pd.read_csv("data/churn_train.csv")
+  test = pd.read_csv("data/churn_test.csv")
+hints:
+- shape → 列の差 → 型 → 目的変数 → ID → カテゴリ の順に確認すると漏れにくいです
+- 列の差は set(train.columns) - set(test.columns)
+- 型の比較は train.dtypes と test.dtypes を並べて見ましょう
+- カテゴリ列の差は set(test["region"]) - set(train["region"]) (P038)
+solution:
+  checklist: |
+    | 確認したいこと | コード |
+    |---|---|
+    | サイズ | `train.shape, test.shape` |
+    | 列の違い | `set(train.columns) - set(test.columns)` |
+    | 型の違い | `pd.DataFrame({"train": train.dtypes, "test": test.dtypes})` |
+    | 目的変数 | `train["churn"].value_counts(normalize=True, dropna=False)` |
+    | ID・重複 | `train["id"].nunique(), len(train), train.duplicated().sum()` |
+    | カテゴリの差 | `set(test["region"]) - set(train["region"])` |
+    | 欠損 | `train.isna().mean().sort_values(ascending=False)` |
+  code: |
+    train.shape, test.shape
+    # %%
+    set(train.columns) - set(test.columns), set(test.columns) - set(train.columns)
+    # %%
+    pd.DataFrame({"train": train.dtypes, "test": test.dtypes})
+    # %%
+    train["churn"].value_counts(normalize=True, dropna=False)
+    # %%
+    train["id"].nunique(), len(train), train.duplicated().sum()
+    # %%
+    train["id"].min(), train["id"].max(), test["id"].min(), test["id"].max()
+    # %%
+    set(test["region"]) - set(train["region"]), set(test["plan"]) - set(train["plan"])
+    # %%
+    test["region"].value_counts()
+    # %%
+    train.isna().mean().sort_values(ascending=False).head()
+    # %%
+    test.isna().mean().sort_values(ascending=False).head()
+    # %%
+    train.head()
+  observations: |
+    1. train は **604行 × 15列**、test は **250行 × 14列**。test に無いのは目的変数 `churn` だけ
+    2. `last_login_days` が train では `float64`、test では `int64`。**train にだけ欠損がある**ため(欠損を含む整数列は float になる)
+    3. `churn` は 0 が約79%、1 が約20%、**欠損が5件(約0.8%)**。学習前に欠損行を除く必要がある
+    4. `id` は 604 行に対して 600 種類。**完全重複行が4行**ある。train の id は 1〜600、test は 601〜850 で重なりはない
+    5. **`region` の `"Okinawa"` は test にだけ存在**(9件)。`plan` は差なし
+    6. 型がおかしい列
+       - `income` が `str`: 数値の中に `"unknown"` が混ざっている
+       - `postal_code` が `int64`: 郵便番号は本来文字列。先頭の0が消えている(例: `566851` は7桁でない)
+    7. その他: `coupon_code` は約87%が欠損、`country` は全行 `"JP"` で情報がない(P044)
+  points: |
+    - train / test を受け取ったら: **shape → 列の差 → 型の差 → 目的変数 → ID → カテゴリの差**
+    - 型の差は欠損の有無から生まれることが多い
+    - test にだけあるカテゴリは、エンコード方法を決める前に必ず確認する

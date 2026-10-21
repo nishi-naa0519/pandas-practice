@@ -1,0 +1,19 @@
+id: P013
+title: 位置を指定して取り出す(iloc)
+category: B
+problem_type: coding
+difficulty: 1
+learning_level: 1
+primary_tags:
+- method:iloc
+secondary_tags: []
+curriculum_items:
+- iloc
+estimated_minutes: 2
+prerequisites:
+- P012
+datasets:
+- web_logs.csv
+source_type: synthetic
+variant_of: null
+created: '2026-10-22'

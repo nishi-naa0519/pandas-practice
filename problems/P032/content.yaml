@@ -1,0 +1,25 @@
+purpose: 大文字・小文字の表記ゆれに気づき、そろえてから集計できるようにします。
+statement: |
+  `os` 列には `"iOS"`, `"ios"`, `"IOS"` のような表記ゆれがあります。
+  **すべて小文字にそろえてから**、値ごとの件数を多い順の Series で返してください。
+data:
+- app_users.csv
+setup: df = pd.read_csv("data/app_users.csv")
+preview: df["os"].value_counts()
+signature: 'def solve(df: pd.DataFrame):'
+run: solve(df)
+hints:
+- 文字列の列には .str を付けると文字列の操作が使えます
+- df["os"].str.lower() で小文字に。その後 value_counts()
+solution:
+  code: |
+    def solve(df: pd.DataFrame):
+        return df["os"].str.lower().value_counts()
+  explanation: '`.str.lower()` で列のすべての値を小文字にし、続けて `value_counts()` で数えます。'
+  points: |
+    - カテゴリ列は `value_counts()` で**表記ゆれがないか**を必ず見る
+    - 小文字にそろえる: `df["col"].str.lower()`
+    - 前後の空白(`"Tokyo "` など)もよくある表記ゆれ。見つけたら AI に整形を頼んでもよい
+  mistakes: |
+    - `df["os"].lower()` → `.str` が必要
+    - `value_counts()` してから小文字にしても、件数はまとまらない

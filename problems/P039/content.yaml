@@ -1,0 +1,28 @@
+purpose: ID のように種類が多すぎて、そのままでは特徴量にしにくい列を見つけられるようにします。
+statement: '**ユニーク数が 50 以上**の列名をリストで返してください(順番は問いません)。'
+data:
+- churn_train.csv
+setup: df = pd.read_csv("data/churn_train.csv")
+signature: 'def solve(df: pd.DataFrame):'
+run: solve(df)
+hints:
+- df.nunique() で列ごとのユニーク数の Series になります
+- 'Series も boolean indexing で絞れます: s[s >= 50]'
+- 絞った Series の index が列名です
+solution:
+  code: |
+    def solve(df: pd.DataFrame):
+        n_unique = df.nunique()
+        return list(n_unique[n_unique >= 50].index)
+  explanation: |
+    1. `df.nunique()` で「列名 → ユニーク数」の Series を作る
+    2. `n_unique[n_unique >= 50]` で、DataFrame と同じように条件で絞る
+    3. 残った Series の index(= 列名)をリストにする
+  points: |
+    - 列ごとのユニーク数: `df.nunique()`
+    - Series も `s[s >= 50]` で絞れる。`.index` で列名が取れる
+    - ユニーク数が行数に近い列は ID の可能性が高い(このデータの `id`, `postal_code`)
+    - 数値の列(`age` など)はユニーク数が多くて当然。カテゴリ列かどうかと合わせて判断する
+  mistakes: |
+    - `df[df.nunique() >= 50]` → 行の抽出になってしまう
+    - `.index` ではなく `.values` → ユニーク数の値が返る

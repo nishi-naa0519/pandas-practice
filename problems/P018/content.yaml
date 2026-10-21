@@ -1,0 +1,24 @@
+purpose: 「1行 = 1顧客」のような前提が本当に成り立っているかを確認できるようにします。
+statement: '`customer_id` が**すべての行で異なる(一意である)**なら `True`、そうでなければ `False` を返してください。'
+data:
+- customers.csv
+setup: df = pd.read_csv("data/customers.csv")
+signature: 'def solve(df: pd.DataFrame):'
+run: solve(df)
+hints:
+- ユニークな値の数は .nunique() で数えられます
+- ユニーク数が行数 len(df) と同じなら一意です
+solution:
+  code: |
+    def solve(df: pd.DataFrame):
+        return df["customer_id"].nunique() == len(df)
+  explanation: |
+    `df["customer_id"].nunique()` は ID の種類数です。行数 `len(df)` と同じなら、すべての行で ID が異なります。
+    このデータでは False になります(重複行が混ざっているため)。
+  points: |
+    - ID の一意性: `df["id"].nunique() == len(df)`
+    - 重複している ID の数を知りたいときは `df["id"].duplicated().sum()`
+    - 「ID が一意でない」と、結合で行が増える・集計が二重になるなどの問題が起きる
+  mistakes: |
+    - `df.nunique()` → 全列のユニーク数になる。1列を選んでから使う
+    - `df["customer_id"].unique() == len(df)` → unique() は値の配列。数は nunique()

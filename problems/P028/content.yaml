@@ -1,0 +1,26 @@
+purpose: 既存の列を使った計算で、新しい列をすぐ追加できるようにします。
+statement: '`price × quantity` を計算した列 `amount` を追加し、**`df` 全体**を返してください。'
+data:
+- orders.csv
+setup: df = pd.read_csv("data/orders.csv")
+preview: df.head()
+signature: 'def solve(df: pd.DataFrame):'
+run: solve(df)
+hints:
+- df["新しい列名"] = 計算式 で列を追加できます
+- 列どうしの掛け算は df["price"] * df["quantity"] でまとめて計算できます
+solution:
+  code: |
+    def solve(df: pd.DataFrame):
+        df["amount"] = df["price"] * df["quantity"]
+        return df
+  explanation: |
+    `df["price"] * df["quantity"]` は、同じ行どうしをまとめて掛け算します(ベクトル演算)。
+    その結果を `df["amount"] = ...` で新しい列として代入します。
+  points: |
+    - 列の追加: `df["new"] = 式`
+    - 列どうしの `+ - * /` は行ごとにまとめて計算される。**for 文や apply() は不要**
+    - どちらかが欠損の行は、結果も欠損になる
+  mistakes: |
+    - `df.amount = ...` → 新しい列は作られない。必ず `df["amount"]` で代入する
+    - `df.apply(lambda row: row["price"] * row["quantity"], axis=1)` → 動くが遅く読みにくい。このカリキュラムでは使わない

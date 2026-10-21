@@ -1,0 +1,23 @@
+id: P038
+title: testにだけ現れるカテゴリを見つける
+category: H
+problem_type: coding
+difficulty: 2
+learning_level: 2
+primary_tags:
+- task:train_test_comparison
+- concept:unseen_category
+secondary_tags:
+- syntax:python_set
+- syntax:column_selection
+curriculum_items:
+- eda_train_test
+estimated_minutes: 3
+prerequisites:
+- P019
+datasets:
+- churn_train.csv
+- churn_test.csv
+source_type: synthetic
+variant_of: null
+created: '2026-10-22'

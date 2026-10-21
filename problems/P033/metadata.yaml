@@ -1,0 +1,23 @@
+id: P033
+title: 特定の文字列を含む行を集計する
+category: F
+problem_type: coding
+difficulty: 2
+learning_level: 2
+primary_tags:
+- method:str_contains
+secondary_tags:
+- syntax:boolean_indexing
+- method:value_counts
+curriculum_items:
+- str_basic
+- boolean_indexing
+- value_counts
+estimated_minutes: 3
+prerequisites:
+- P032
+datasets:
+- web_logs.csv
+source_type: synthetic
+variant_of: null
+created: '2026-10-22'

@@ -1,0 +1,28 @@
+purpose: カテゴリごとの目的変数の平均を、**件数と一緒に**確認できるようにします。
+statement: |
+  `plan` ごとに、`churn` の**平均(解約率)**と**件数**を求めてください。
+  列名が `mean` と `count` の DataFrame で返してください(index が plan)。
+data:
+- churn_train.csv
+setup: df = pd.read_csv("data/churn_train.csv")
+signature: 'def solve(df: pd.DataFrame):'
+run: solve(df)
+hints:
+- 複数の集計をまとめてかけるときは .agg(["集計1", "集計2"])
+- df.groupby("plan")["churn"].agg(["mean", "count"])
+solution:
+  code: |
+    def solve(df: pd.DataFrame):
+        return df.groupby("plan")["churn"].agg(["mean", "count"])
+  explanation: |
+    `.agg(["mean", "count"])` で、1つの列に複数の集計をまとめてかけられます。結果の列名は集計名になります。
+
+    0/1 の目的変数の平均は「1 の割合」なので、`mean` がそのまま解約率です。
+    `count` は欠損を除いた件数です。
+  points: |
+    - 平均と件数を同時に: `df.groupby("cat")["target"].agg(["mean", "count"])`
+    - **件数の少ないグループの平均は信用しない**(数件しかないと偶然で大きく変わる)
+    - `agg` で書くのはこの形まで。列名を自分で付ける書き方(named aggregation)は読めればよい
+  mistakes: |
+    - `.agg("mean", "count")` → リストにする
+    - `.count()` と `.size()` の違い: count は欠損を除く、size は欠損も含めた行数

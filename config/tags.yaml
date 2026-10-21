@@ -1,0 +1,199 @@
+# 問題で使用できるタグの一覧(ここに無いタグは使用禁止)
+#
+# 命名規則: <種類>:<snake_case>
+#   method:  pandas のメソッド・属性・関数(df.shape のような属性も method に含める)
+#   syntax:  特定のメソッドに依存しない書き方・構文
+#   task:    EDA で「何を確認したいか」という目的
+#   concept: 理解しておくべきデータ上の概念
+#
+# 新しいタグが必要な場合は、問題に書く前にこのファイルへ追加すること。
+
+methods:
+  # --- A. 読み込み・全体確認 ---
+  - id: method:read_csv
+    description: pd.read_csv() でCSVを読み込む
+  - id: method:head
+    description: 先頭n行を見る
+  - id: method:tail
+    description: 末尾n行を見る
+  - id: method:sample
+    description: ランダムにn行を見る
+  - id: method:shape
+    description: (行数, 列数) を確認する属性
+  - id: method:columns
+    description: 列名の一覧を確認する属性
+  - id: method:dtypes
+    description: 各列の型を確認する属性
+  - id: method:info
+    description: 行数・非欠損数・型をまとめて表示する
+  - id: method:describe
+    description: 数値列の要約統計量を見る
+  # --- B. 選択 ---
+  - id: method:loc
+    description: ラベル(条件・列名)で行と列を同時に選ぶ
+  - id: method:iloc
+    description: 位置(何行目・何列目)で選ぶ
+  - id: method:isin
+    description: 複数の値のどれかに一致するかを判定する
+  # --- C. 品質確認 ---
+  - id: method:isna
+    description: 欠損かどうかを判定する(.sum() で件数, .mean() で割合)
+  - id: method:duplicated
+    description: 重複行かどうかを判定する
+  - id: method:nunique
+    description: ユニークな値の数を数える
+  - id: method:value_counts
+    description: 値ごとの件数(normalize=True で割合)を数える
+  # --- D. 基本統計・並び替え ---
+  - id: method:mean
+    description: 平均
+  - id: method:median
+    description: 中央値
+  - id: method:std
+    description: 標準偏差
+  - id: method:min
+    description: 最小値
+  - id: method:max
+    description: 最大値
+  - id: method:sum
+    description: 合計(True/False の Series に使うと True の件数)
+  - id: method:count
+    description: 欠損でない値の件数
+  - id: method:sort_values
+    description: 値で並び替える
+  - id: method:quantile
+    description: 分位点(Read寄り)
+  # --- E. groupby ---
+  - id: method:groupby
+    description: グループごとに集計する
+  - id: method:agg
+    description: 複数の集計をまとめて行う(シンプルな agg(["mean", "count"]) まで)
+  - id: method:reset_index
+    description: index を列に戻して普通の表にする
+  # --- F. 加工 ---
+  - id: method:fillna
+    description: 欠損を値で埋める
+  - id: method:dropna
+    description: 欠損を含む行を落とす
+  - id: method:drop_duplicates
+    description: 重複行を落とす
+  - id: method:astype
+    description: 型を変換する
+  - id: method:to_datetime
+    description: 文字列を日時型に変換する
+  - id: method:dt_accessor
+    description: .dt.year / .dt.month / .dt.day など日時の要素を取り出す
+  - id: method:str_lower
+    description: .str.lower() で小文字にそろえる
+  - id: method:str_contains
+    description: .str.contains() で部分一致を判定する
+  # --- G. 結合 ---
+  - id: method:merge
+    description: pd.merge() でキーを使って2つの表を結合する
+  # --- Read / AI 対象(暗記用の問題は作らない。解説で触れる場合などに使う) ---
+  - id: method:query
+    description: "[Read] 文字列で条件を書く行抽出"
+  - id: method:apply
+    description: "[AI] 行・列ごとに関数を適用する"
+  - id: method:transform
+    description: "[AI] グループ集計結果を元の行数に戻す"
+  - id: method:pivot_table
+    description: "[Read] クロス集計表を作る"
+  - id: method:melt
+    description: "[AI] 横持ちを縦持ちに変換する"
+  - id: method:stack_unstack
+    description: "[Read] MultiIndex と列を入れ替える"
+  - id: method:rolling
+    description: "[AI] 移動窓集計"
+  - id: method:resample
+    description: "[AI] 時系列の期間ごと集計"
+  - id: method:concat
+    description: "[Read] 表を縦・横に連結する"
+
+syntax:
+  - id: syntax:column_selection
+    description: df["col"] で1列(Series)、df[["a", "b"]] で複数列(DataFrame)を選ぶ
+  - id: syntax:boolean_indexing
+    description: df[df["col"] >= 20] のように条件で行を絞る
+  - id: syntax:multiple_conditions
+    description: "& (かつ) と | (または) で条件を組み合わせる。各条件は () で囲む"
+  - id: syntax:negation
+    description: "~ で条件を否定する"
+  - id: syntax:method_chaining
+    description: df.isna().mean().sort_values() のように短くメソッドをつなげる(2〜3個まで)
+  - id: syntax:new_column
+    description: df["new"] = ... で列を追加する
+  - id: syntax:column_arithmetic
+    description: 列どうしの四則演算(ベクトル演算)
+  - id: syntax:python_set
+    description: set() と差集合 - で値の集合を比べる
+  - id: syntax:named_aggregation
+    description: "[Read] agg(avg=(\"col\", \"mean\")) 形式の名前付き集計"
+
+tasks:
+  - id: task:data_overview
+    description: サイズ・列・型・中身をざっと把握する
+  - id: task:type_check
+    description: 各列の型が想定どおりか(数値なのに文字列型など)を確認する
+  - id: task:missing_check
+    description: 欠損の数・割合・どの行に欠損があるかを確認する
+  - id: task:duplicate_check
+    description: 重複行や重複IDを確認する
+  - id: task:cardinality_check
+    description: カテゴリ列やID列のユニーク数を確認する
+  - id: task:category_distribution
+    description: カテゴリごとの件数・割合を見る
+  - id: task:class_balance
+    description: 目的変数のクラス比率を見る
+  - id: task:summary_stats
+    description: 平均・中央値・最小・最大などの要約統計を見る
+  - id: task:anomaly_check
+    description: 異常値・ありえない値・おかしな分布を探す
+  - id: task:ranking
+    description: 値の大きい順・小さい順に並べて上位を見る
+  - id: task:group_comparison
+    description: グループごとの集計値を比べる
+  - id: task:target_analysis
+    description: カテゴリや特徴量ごとの目的変数の傾向を見る
+  - id: task:train_test_comparison
+    description: train と test の形・列・カテゴリの違いを確認する
+  - id: task:period_check
+    description: 日時列の最小・最大から期間を確認する
+  - id: task:join_check
+    description: 結合前後の行数や対応のないキーを確認する
+  - id: task:data_cleaning
+    description: 型変換・欠損処理・重複除去・表記ゆれの統一など
+  - id: task:feature_creation
+    description: 既存列から新しい列を作る
+  - id: task:feature_screening
+    description: モデルに入れる前に除外候補の列を見つける
+
+concepts:
+  - id: concept:missing_values
+    description: 欠損(NaN)の扱い。多くの集計は欠損を除外して計算する
+  - id: concept:data_types
+    description: int / float / str / datetime の違い。欠損があると整数列は float になる
+  - id: concept:cardinality
+    description: カテゴリの種類数。多すぎるとそのままでは特徴量にしにくい
+  - id: concept:class_imbalance
+    description: 目的変数のクラスの偏り
+  - id: concept:aggregation
+    description: 複数行を1つの値にまとめる操作
+  - id: concept:duplicates
+    description: 完全重複行と、キーだけ重複している行の違い
+  - id: concept:unique_key
+    description: ID列が1行に1つだけ対応しているか
+  - id: concept:outliers
+    description: 外れ値・ありえない値(負の年齢、999 など)
+  - id: concept:inconsistent_labels
+    description: 同じ意味の値の表記ゆれ("iOS" と "ios" など)
+  - id: concept:unseen_category
+    description: test にだけ現れるカテゴリ
+  - id: concept:join_types
+    description: inner / left join の違いと、結合で行数が増減する理由
+  - id: concept:datetime
+    description: 日時型と Timedelta(期間)
+  - id: concept:sample_size
+    description: 件数の少ないグループの平均は当てにならない
+  - id: concept:index_label
+    description: 行の index ラベル(フィルタ後も元のラベルが残る)

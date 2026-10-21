@@ -1,0 +1,24 @@
+id: P024
+title: グループの平均が高い順に並べる
+category: E
+problem_type: coding
+difficulty: 2
+learning_level: 2
+primary_tags:
+- method:groupby
+- method:sort_values
+secondary_tags:
+- method:mean
+- task:group_comparison
+- syntax:method_chaining
+curriculum_items:
+- groupby_sort
+estimated_minutes: 3
+prerequisites:
+- P023
+- P021
+datasets:
+- app_users.csv
+source_type: synthetic
+variant_of: null
+created: '2026-10-22'

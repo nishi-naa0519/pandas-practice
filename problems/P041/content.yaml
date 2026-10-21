@@ -1,0 +1,28 @@
+purpose: 集計から除外すべき行を `~` と `isin` で取り除いてから集計できるようにします。
+statement: |
+  `device` が `"bot"` と `"crawler"` の**ログを除いた**うえで、`user_id` ごとのログ件数を数え、
+  **件数の多い上位3ユーザー**を Series で返してください。
+data:
+- web_logs.csv
+setup: df = pd.read_csv("data/web_logs.csv")
+signature: 'def solve(df: pd.DataFrame):'
+run: solve(df)
+hints:
+- 「リストのどれでもない」は ~df["device"].isin([...])
+- 件数を数えて多い順 → value_counts()、上位3件 → head(3)
+solution:
+  code: |
+    def solve(df: pd.DataFrame):
+        human = df[~df["device"].isin(["bot", "crawler"])]
+        return human["user_id"].value_counts().head(3)
+  explanation: |
+    1. `df["device"].isin(["bot", "crawler"])` は bot / crawler なら True
+    2. `~` で反転して「bot でも crawler でもない」行に絞る
+    3. `user_id` の `value_counts()`(多い順)から `head(3)`
+  points: |
+    - 除外: `df[~df["col"].isin([...])]`
+    - ボットや社内テストアカウントなど、**分析対象でない行を先に除く**のは EDA の定番
+    - `value_counts()` は多い順に並ぶので、`head(n)` で上位N件になる
+  mistakes: |
+    - `~` を付け忘れる → bot と crawler だけが残る
+    - `df["device"] != ["bot", "crawler"]` → エラー。複数の値には isin

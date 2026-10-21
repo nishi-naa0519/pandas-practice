@@ -1,0 +1,580 @@
+# 学習範囲の定義
+#
+# target_level:
+#   Write : 何も見ずに5〜10秒で書けるようにする。問題演習の中心
+#   Read  : 人やAIが書いたコードを読んで意味が分かればよい。暗記用の問題は作らない
+#   AI    : 必要になったらAIに書かせる。原則として問題を作らない
+#
+# recommended_problem_levels:
+#   1 = 単一操作 / 2 = 小さな組み合わせ(最重視) / 3 = EDAタスク(使う関数を指定しない)
+#
+# Write 対象では「同じことをする方法」を1つだけ選び、basic_form に書く。
+# 問題・解説ではこの basic_form を使い、別の書き方を積極的に紹介しない。
+
+goal: >-
+  初めて見るCSVやDataFrameをNotebookで開き、データの構造、欠損、型、分布、カテゴリ、
+  簡単なグループ差などを数分で自力で確認できる。
+
+categories:
+  A: {name: データの読み込み・全体確認, goal: 未知のDataFrameのサイズ・列名・型・概要を短時間で確認できる}
+  B: {name: 行・列の選択, goal: 「この条件の行だけ」「この列だけ」をすぐコードにできる}
+  C: {name: データ品質確認, goal: 欠損・重複・ユニーク数・カテゴリ分布などML前処理前の問題を見つけられる}
+  D: {name: 基本統計・並び替え, goal: 平均・中央値・最小・最大を出し、並び替えて上位を確認できる}
+  E: {name: groupbyによる基本集計, goal: 「カテゴリ別に平均や件数を見たい」ときにすぐ groupby を選べる}
+  F: {name: 最低限のデータ加工, goal: 列の追加・欠損処理・型変換・日時/文字列の基本操作ができる}
+  G: {name: 結合, goal: 2つの表をキーで結合する基本形を書き、結合結果を確認できる}
+  H: {name: MLエンジニア向けEDA, goal: EDAで何を確認すべきか判断し、基本操作を組み合わせて確認できる}
+  X: {name: 暗記対象外, goal: 読めればよい・AIに任せればよいものを明示する}
+
+items:
+  # ============ A. データの読み込み・全体確認 ============
+  - id: read_csv
+    category: A
+    name: CSVの読み込み
+    target_level: Write
+    basic_form: 'df = pd.read_csv("data/xxx.csv")'
+    description: pd.read_csv() でCSVをDataFrameとして読み込む。引数はパスだけでよい
+    learning_goal: 何も見ずに read_csv で読み込みを書ける
+    recommended_problem_levels: [1]
+    related_tags: [method:read_csv]
+
+  - id: head_tail_sample
+    category: A
+    name: 先頭・末尾・ランダムな行を見る
+    target_level: Write
+    basic_form: 'df.head() / df.tail() / df.sample(5, random_state=0)'
+    description: データの中身を数行だけ見て、どんな値が入っているかを確認する
+    learning_goal: 読み込み直後に反射的に head() を打てる。並び順の確認に tail()、偏りのない確認に sample() を使える
+    recommended_problem_levels: [1, 3]
+    related_tags: [method:head, method:tail, method:sample, task:data_overview]
+
+  - id: shape
+    category: A
+    name: 行数・列数
+    target_level: Write
+    basic_form: 'df.shape'
+    description: (行数, 列数) のタプル。括弧を付けない属性
+    learning_goal: データのサイズを1秒で確認できる
+    recommended_problem_levels: [1, 2]
+    related_tags: [method:shape, task:data_overview]
+
+  - id: columns
+    category: A
+    name: 列名一覧
+    target_level: Write
+    basic_form: 'df.columns'
+    description: 列名の一覧。list(df.columns) でリストになる
+    learning_goal: 列名を確認し、列名の集合を比較できる
+    recommended_problem_levels: [1, 2]
+    related_tags: [method:columns, task:data_overview]
+
+  - id: dtypes
+    category: A
+    name: 列の型
+    target_level: Write
+    basic_form: 'df.dtypes'
+    description: 各列の型。int64 / float64 / str / datetime64 など
+    learning_goal: 想定外の型(数値なのに str、欠損で float になった int)に気づける
+    recommended_problem_levels: [1, 3]
+    related_tags: [method:dtypes, task:type_check, concept:data_types]
+
+  - id: info
+    category: A
+    name: info() による概要確認
+    target_level: Write
+    basic_form: 'df.info()'
+    description: 行数・各列の非欠損数・型・メモリ使用量をまとめて表示する(戻り値は無い)
+    learning_goal: 初見のデータで info() を使い、欠損と型を一度に把握できる
+    recommended_problem_levels: [3]
+    related_tags: [method:info, task:data_overview]
+
+  - id: describe
+    category: A
+    name: 要約統計量
+    target_level: Write
+    basic_form: 'df.describe()'
+    description: 数値列の count / mean / std / min / 四分位 / max
+    learning_goal: count から欠損、mean と 50% の差から歪み、min / max から異常値に気づける
+    recommended_problem_levels: [1, 3]
+    related_tags: [method:describe, task:summary_stats, task:anomaly_check]
+
+  # ============ B. 行・列の選択 ============
+  - id: column_selection
+    category: B
+    name: 列の選択
+    target_level: Write
+    basic_form: 'df["col"] / df[["a", "b"]]'
+    description: 1列なら Series、リストで渡すと DataFrame
+    learning_goal: 1列と複数列の書き分けを迷わずできる
+    recommended_problem_levels: [1]
+    related_tags: [syntax:column_selection]
+
+  - id: boolean_indexing
+    category: B
+    name: 条件による行の抽出
+    target_level: Write
+    basic_form: 'df[df["age"] >= 20]'
+    description: 条件式で True/False の Series を作り、それで行を絞る。query() は使わない
+    learning_goal: 「この条件の行だけ見たい」をすぐ書ける
+    recommended_problem_levels: [1, 2]
+    related_tags: [syntax:boolean_indexing, concept:index_label]
+
+  - id: multiple_conditions
+    category: B
+    name: 複数条件 (& | ~)
+    target_level: Write
+    basic_form: 'df[(df["a"] == "x") & (df["b"] >= 2)]'
+    description: "& / | / ~ で条件を組み合わせる。各条件を () で囲む。and / or は使えない"
+    learning_goal: 括弧を忘れずに複数条件を書ける
+    recommended_problem_levels: [2]
+    related_tags: [syntax:multiple_conditions, syntax:negation]
+
+  - id: isin
+    category: B
+    name: isin による複数値の一致
+    target_level: Write
+    basic_form: 'df[df["pref"].isin(["Tokyo", "Osaka"])]'
+    description: いずれかの値に一致する行。否定は ~df["pref"].isin([...])
+    learning_goal: == を | で並べる代わりに isin を使える
+    recommended_problem_levels: [1, 2]
+    related_tags: [method:isin, syntax:negation]
+
+  - id: loc
+    category: B
+    name: loc で行と列を同時に選ぶ
+    target_level: Write
+    basic_form: 'df.loc[df["a"] > 0, ["b", "c"]]'
+    description: ラベル(条件・列名)で行と列を同時に指定する
+    learning_goal: 条件で絞りつつ見たい列だけ表示できる
+    recommended_problem_levels: [2]
+    related_tags: [method:loc]
+
+  - id: iloc
+    category: B
+    name: iloc で位置指定
+    target_level: Write
+    basic_form: 'df.iloc[:5, :3]'
+    description: 何行目・何列目という位置で選ぶ。終わりの位置は含まない
+    learning_goal: 位置で少しだけ切り出せる
+    recommended_problem_levels: [1]
+    related_tags: [method:iloc]
+
+  # ============ C. データ品質確認 ============
+  - id: isna_count
+    category: C
+    name: 欠損数
+    target_level: Write
+    basic_form: 'df.isna().sum()'
+    description: 列ごとの欠損数。1列なら df["age"].isna().sum()
+    learning_goal: 読み込み直後に欠損数を確認できる
+    recommended_problem_levels: [1, 2]
+    related_tags: [method:isna, method:sum, task:missing_check, concept:missing_values]
+
+  - id: isna_rate
+    category: C
+    name: 欠損率
+    target_level: Write
+    basic_form: 'df.isna().mean()'
+    description: True=1 として平均を取ると欠損の割合になる
+    learning_goal: 欠損率を求め、高い順に並べられる
+    recommended_problem_levels: [2]
+    related_tags: [method:isna, method:mean, method:sort_values, task:missing_check]
+
+  - id: duplicated
+    category: C
+    name: 重複の確認
+    target_level: Write
+    basic_form: 'df.duplicated().sum()'
+    description: 完全に同じ行(2回目以降)の数。ID列だけの重複は df["id"].duplicated().sum()
+    learning_goal: 重複行と重複IDを区別して確認できる
+    recommended_problem_levels: [1, 2]
+    related_tags: [method:duplicated, task:duplicate_check, concept:duplicates]
+
+  - id: nunique
+    category: C
+    name: ユニーク数
+    target_level: Write
+    basic_form: 'df.nunique() / df["id"].nunique()'
+    description: 列ごとの値の種類数(欠損は数えない)
+    learning_goal: ID列の一意性やカテゴリの cardinality を確認できる
+    recommended_problem_levels: [1, 2]
+    related_tags: [method:nunique, task:cardinality_check, concept:cardinality, concept:unique_key]
+
+  - id: value_counts
+    category: C
+    name: 値ごとの件数
+    target_level: Write
+    basic_form: 'df["col"].value_counts()'
+    description: 値ごとの件数(多い順)。欠損は数えない
+    learning_goal: カテゴリの分布をすぐ見られる
+    recommended_problem_levels: [1, 2]
+    related_tags: [method:value_counts, task:category_distribution]
+
+  - id: value_counts_normalize
+    category: C
+    name: 値ごとの割合
+    target_level: Write
+    basic_form: 'df["col"].value_counts(normalize=True)'
+    description: 件数ではなく割合で表示する
+    learning_goal: 目的変数のクラス比率をすぐ確認できる
+    recommended_problem_levels: [1, 2]
+    related_tags: [method:value_counts, task:class_balance, concept:class_imbalance]
+
+  # ============ D. 基本統計・並び替え ============
+  - id: basic_stats
+    category: D
+    name: 基本統計量
+    target_level: Write
+    basic_form: 'df["col"].mean() / median() / std() / min() / max() / sum() / count()'
+    description: 1列または複数列の基本統計。欠損は除いて計算される。count() は欠損でない件数
+    learning_goal: 必要な統計量を1つずつすぐ出せる
+    recommended_problem_levels: [1, 2]
+    related_tags: [method:mean, method:median, method:std, method:min, method:max, method:sum, method:count, task:summary_stats]
+
+  - id: sort_values
+    category: D
+    name: 並び替え
+    target_level: Write
+    basic_form: 'df.sort_values("col", ascending=False).head(5)'
+    description: 値で並び替える。上位を見るときは head() と組み合わせる。nlargest() は使わない
+    learning_goal: 「大きい順の上位N件」をすぐ書ける
+    recommended_problem_levels: [2]
+    related_tags: [method:sort_values, method:head, task:ranking]
+
+  - id: quantile
+    category: D
+    name: 分位点
+    target_level: Read
+    description: df["col"].quantile(0.99) など。外れ値の目安に使うが、まずは describe() で十分
+    learning_goal: コードに出てきたら意味が分かる
+    recommended_problem_levels: []
+    related_tags: [method:quantile]
+
+  # ============ E. groupby ============
+  - id: groupby_single
+    category: E
+    name: groupby で単一集計
+    target_level: Write
+    basic_form: 'df.groupby("cat")["val"].mean()'
+    description: グループ列 → 集計する列 → 集計関数 の順。mean / sum / count / median / max など
+    learning_goal: カテゴリ別の平均・合計・件数をすぐ出せる
+    recommended_problem_levels: [1, 2]
+    related_tags: [method:groupby, task:group_comparison, concept:aggregation]
+
+  - id: groupby_sort
+    category: E
+    name: groupby 結果の並び替え
+    target_level: Write
+    basic_form: 'df.groupby("cat")["val"].mean().sort_values(ascending=False)'
+    description: 集計結果の Series をそのまま sort_values する
+    learning_goal: 「平均が高いグループ順」をすぐ見られる
+    recommended_problem_levels: [2]
+    related_tags: [method:groupby, method:sort_values, syntax:method_chaining]
+
+  - id: groupby_multi_key
+    category: E
+    name: 複数キーの groupby
+    target_level: Write
+    basic_form: 'df.groupby(["a", "b"])["val"].sum().reset_index()'
+    description: 複数キーで集計すると index が2段(MultiIndex)になるので、reset_index() で普通の表に戻す
+    learning_goal: 2つのカテゴリの組み合わせごとの集計を表で見られる
+    recommended_problem_levels: [2]
+    related_tags: [method:groupby, method:reset_index]
+
+  - id: groupby_agg_simple
+    category: E
+    name: シンプルな agg
+    target_level: Write
+    note: Write と Read の境界。agg(["mean", "count"]) の形だけ書ければよい
+    basic_form: 'df.groupby("cat")["val"].agg(["mean", "count"])'
+    description: 1つの列に複数の集計をまとめてかける。平均と件数を同時に見るのに便利
+    learning_goal: グループの平均と件数(信頼できる件数か)を同時に確認できる
+    recommended_problem_levels: [2]
+    related_tags: [method:agg, method:groupby, concept:sample_size]
+
+  - id: named_aggregation
+    category: E
+    name: named aggregation
+    target_level: Read
+    description: |
+      df.groupby(["category", "region"]).agg(
+          avg_sales=("sales", "mean"),
+          n=("sales", "size"),
+      ).reset_index()
+      のような複数列・複数集計。意味が読めればよく、暗記は不要
+    learning_goal: AIが書いた集計コードを読んで結果の列を説明できる
+    recommended_problem_levels: []
+    related_tags: [syntax:named_aggregation, method:agg]
+
+  # ============ F. 最低限のデータ加工 ============
+  - id: new_column
+    category: F
+    name: 新しい列の作成
+    target_level: Write
+    basic_form: 'df["amount"] = df["price"] * df["quantity"]'
+    description: 既存列を使ったベクトル演算で列を追加する。apply() は使わない
+    learning_goal: 簡単な派生列をすぐ作れる
+    recommended_problem_levels: [1, 2]
+    related_tags: [syntax:new_column, syntax:column_arithmetic, task:feature_creation]
+
+  - id: fillna
+    category: F
+    name: 欠損を埋める
+    target_level: Write
+    basic_form: 'df["age"] = df["age"].fillna(df["age"].median())'
+    description: 列を指定して埋め、結果を代入し直す
+    learning_goal: 中央値などで欠損を埋められる
+    recommended_problem_levels: [2]
+    related_tags: [method:fillna, method:median, task:data_cleaning]
+
+  - id: dropna
+    category: F
+    name: 欠損を含む行を落とす
+    target_level: Write
+    basic_form: 'df.dropna(subset=["target"])'
+    description: subset で列を指定するのが基本。指定しないと1つでも欠損がある行が全部消える
+    learning_goal: 目的変数が欠損している行だけを落とせる
+    recommended_problem_levels: [2]
+    related_tags: [method:dropna, task:data_cleaning]
+
+  - id: drop_duplicates
+    category: F
+    name: 重複行を落とす
+    target_level: Write
+    basic_form: 'df.drop_duplicates()'
+    description: 完全重複行の2回目以降を削除する
+    learning_goal: 重複行を削除できる
+    recommended_problem_levels: [2]
+    related_tags: [method:drop_duplicates, task:data_cleaning]
+
+  - id: astype
+    category: F
+    name: 型変換
+    target_level: Write
+    basic_form: 'df["id"] = df["id"].astype(str)'
+    description: str / int / float への変換。"1,200" のような文字列の変換は AI 対象
+    learning_goal: IDを文字列にする、0/1 を int にするなどの変換ができる
+    recommended_problem_levels: [1]
+    related_tags: [method:astype, concept:data_types]
+
+  - id: to_datetime
+    category: F
+    name: 日時への変換と要素の取り出し
+    target_level: Write
+    basic_form: 'df["date"] = pd.to_datetime(df["date"]); df["date"].dt.month'
+    description: pd.to_datetime() で日時型にし、.dt.year / .dt.month / .dt.day で要素を取り出す。日時の差は Timedelta で .days で日数になる
+    learning_goal: 日時列を変換し、年・月の列を作ったり期間を確認できる
+    recommended_problem_levels: [2]
+    related_tags: [method:to_datetime, method:dt_accessor, concept:datetime, task:period_check]
+
+  - id: str_basic
+    category: F
+    name: 文字列の基本操作
+    target_level: Write
+    basic_form: 'df["os"].str.lower() / df["page"].str.contains("/product/")'
+    description: 表記ゆれをそろえる lower() と、部分一致の contains() だけ
+    learning_goal: 表記ゆれの確認と、文字列を含む行の抽出ができる
+    recommended_problem_levels: [2]
+    related_tags: [method:str_lower, method:str_contains, concept:inconsistent_labels]
+
+  - id: str_advanced
+    category: F
+    name: 文字列の高度な操作
+    target_level: AI
+    description: 正規表現の extract / replace、split して展開、"1,200" → 数値 などは AI に書かせる
+    learning_goal: 必要な処理を日本語で説明してAIに依頼できる
+    recommended_problem_levels: []
+    related_tags: []
+
+  # ============ G. 結合 ============
+  - id: merge_basic
+    category: G
+    name: 基本的な inner / left join
+    target_level: Write
+    basic_form: 'pd.merge(orders, customers, on="customer_id", how="left")'
+    description: 1つのキーでの inner(デフォルト) と left。結合後は行数を確認する
+    learning_goal: キーで2つの表を結合し、行数の増減に気づける
+    recommended_problem_levels: [1, 2, 3]
+    related_tags: [method:merge, task:join_check, concept:join_types]
+
+  - id: merge_advanced
+    category: G
+    name: 複雑な結合
+    target_level: Read
+    description: 複数キー、left_on / right_on、suffixes、validate、indicator、concat など
+    learning_goal: AIが書いた結合コードの意味が分かる
+    recommended_problem_levels: []
+    related_tags: [method:merge, method:concat]
+
+  # ============ H. MLエンジニア向けEDA(既存のWrite操作の組み合わせ) ============
+  - id: eda_overview
+    category: H
+    name: 初見データの全体把握
+    target_level: Write
+    description: shape / head / info / describe でサイズ・列・型・欠損・値の範囲を数分で把握する
+    learning_goal: 何も言われなくても最初の確認一式を流れで書ける
+    recommended_problem_levels: [3]
+    related_tags: [task:data_overview]
+
+  - id: eda_type_anomaly
+    category: H
+    name: 不自然な型の発見
+    target_level: Write
+    description: 数値のはずの列が str になっている、IDが数値になって先頭の0が消えた、欠損で int が float になった、など
+    learning_goal: dtypes と head を見比べて型の問題に気づける
+    recommended_problem_levels: [2, 3]
+    related_tags: [task:type_check, concept:data_types]
+
+  - id: eda_target
+    category: H
+    name: 目的変数の確認
+    target_level: Write
+    description: 目的変数の分布・クラス比率・欠損を確認する
+    learning_goal: 学習前に目的変数のクラス比率と欠損を必ず確認できる
+    recommended_problem_levels: [2, 3]
+    related_tags: [task:class_balance, concept:class_imbalance]
+
+  - id: eda_id_cardinality
+    category: H
+    name: ID列・カテゴリ列の cardinality
+    target_level: Write
+    description: ID列が一意か、カテゴリの種類数が多すぎないか
+    learning_goal: nunique で一意性と cardinality を確認できる
+    recommended_problem_levels: [2, 3]
+    related_tags: [task:cardinality_check, concept:cardinality, concept:unique_key]
+
+  - id: eda_missing
+    category: H
+    name: 欠損の確認
+    target_level: Write
+    description: 各列の欠損数・欠損率・欠損率ランキング・欠損の偏り
+    learning_goal: 欠損の多い列と、欠損が特定のグループに偏っていないかを確認できる
+    recommended_problem_levels: [2, 3]
+    related_tags: [task:missing_check, concept:missing_values]
+
+  - id: eda_duplicates
+    category: H
+    name: 重複の確認
+    target_level: Write
+    description: 完全重複行とID重複の確認
+    learning_goal: 重複がないことを確認してから集計できる
+    recommended_problem_levels: [2, 3]
+    related_tags: [task:duplicate_check, concept:duplicates]
+
+  - id: eda_numeric_range
+    category: H
+    name: 数値の範囲と異常値
+    target_level: Write
+    description: describe / min / max / 条件抽出で、ありえない値(負の値、999、clicks > impressions など)を探す
+    learning_goal: 値の範囲を見て「おかしい」と気づき、該当行を抽出できる
+    recommended_problem_levels: [2, 3]
+    related_tags: [task:anomaly_check, concept:outliers]
+
+  - id: eda_group_target
+    category: H
+    name: カテゴリごとの件数と目的変数平均
+    target_level: Write
+    description: groupby で平均と件数を同時に見て、件数の少ないグループに注意する
+    learning_goal: カテゴリと目的変数の関係をすぐ確認できる
+    recommended_problem_levels: [2, 3]
+    related_tags: [task:target_analysis, task:group_comparison, concept:sample_size]
+
+  - id: eda_train_test
+    category: H
+    name: train / test の比較
+    target_level: Write
+    description: shape・列名・型・カテゴリ集合が train と test で違わないか
+    learning_goal: 学習前に train / test の差分を確認できる
+    recommended_problem_levels: [2, 3]
+    related_tags: [task:train_test_comparison, syntax:python_set, concept:unseen_category]
+
+  - id: eda_period
+    category: H
+    name: 期間の確認
+    target_level: Write
+    description: 日時列の最小・最大、グループごとの期間の違い
+    learning_goal: データがいつからいつまでのものかを確認できる
+    recommended_problem_levels: [2, 3]
+    related_tags: [task:period_check, concept:datetime]
+
+  - id: eda_feature_screening
+    category: H
+    name: 除外候補の列の発見
+    target_level: Write
+    description: 欠損が多すぎる列、値が1種類しかない列、ID のような列
+    learning_goal: 欠損率とユニーク数を組み合わせて除外候補を見つけられる
+    recommended_problem_levels: [3]
+    related_tags: [task:feature_screening]
+
+  - id: eda_join_sanity
+    category: H
+    name: 結合結果の確認
+    target_level: Write
+    description: 結合前後の行数、対応のないキー、キーの重複による行の増加
+    learning_goal: 結合後に「行数が想定どおりか」を確認する習慣がある
+    recommended_problem_levels: [3]
+    related_tags: [task:join_check, concept:join_types]
+
+  # ============ X. 暗記対象外(問題を作らない) ============
+  - id: multiindex
+    category: X
+    name: MultiIndex の操作
+    target_level: Read
+    description: 複数キー groupby の結果などで出てくる。普段は reset_index() で避ける。xs() や高度な index 操作は AI
+    learning_goal: 出てきたときに index が2段になっていると分かる
+    recommended_problem_levels: []
+    related_tags: [method:stack_unstack]
+
+  - id: reshape
+    category: X
+    name: stack / unstack / melt / pivot_table
+    target_level: Read
+    description: 表の形の変換。シンプルな pivot_table は読めればよく、melt や複雑な pivot は AI
+    learning_goal: AIが書いた変形コードの結果の形が想像できる
+    recommended_problem_levels: []
+    related_tags: [method:stack_unstack, method:melt, method:pivot_table]
+
+  - id: window_timeseries
+    category: X
+    name: rolling / expanding / resample
+    target_level: AI
+    description: 移動平均・累積・期間ごとの集計
+    learning_goal: 「7日移動平均」「週ごとに集計」などをAIに依頼できる
+    recommended_problem_levels: []
+    related_tags: [method:rolling, method:resample]
+
+  - id: apply_transform
+    category: X
+    name: apply / transform
+    target_level: AI
+    description: ベクトル演算や標準メソッドで書けるときは使わない。複雑な行ごとの処理はAIに書かせる
+    learning_goal: apply を書く前に、列どうしの演算や標準メソッドで済まないか考えられる
+    recommended_problem_levels: []
+    related_tags: [method:apply, method:transform]
+
+  - id: query_eval
+    category: X
+    name: query / eval
+    target_level: Read
+    description: 条件抽出は boolean indexing に統一する。query() は読めればよい
+    learning_goal: df.query("age >= 20") を見て意味が分かる
+    recommended_problem_levels: []
+    related_tags: [method:query]
+
+  - id: plotting
+    category: X
+    name: pandas 内の複雑な可視化
+    target_level: AI
+    description: グラフはAIに書かせる(df["col"].hist() 程度は読めればよい)
+    learning_goal: 必要なグラフを言葉で依頼できる
+    recommended_problem_levels: []
+    related_tags: []
+
+  - id: long_chaining
+    category: X
+    name: 長い method chaining・トリッキーな書き方
+    target_level: Read
+    description: 4つ以上つながるチェーン、pipe、assign + lambda など。自分では書かない
+    learning_goal: 1ステップずつ分解して読める
+    recommended_problem_levels: []
+    related_tags: [syntax:method_chaining]

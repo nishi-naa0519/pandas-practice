@@ -1,0 +1,28 @@
+purpose: 数値列の分布の概要(件数・平均・ばらつき・範囲)を一度に確認できるようにします。
+statement: |
+  `df` の数値列について、**要約統計量**(count, mean, std, min, 25%, 50%, 75%, max)を
+  まとめた DataFrame を返してください。
+data:
+- store_sales.csv
+setup: df = pd.read_csv("data/store_sales.csv")
+preview: df.head()
+signature: 'def solve(df: pd.DataFrame):'
+run: solve(df)
+hints:
+- 数値列の要約を1行で出すメソッドがあります
+- df.describe()
+solution:
+  code: |
+    def solve(df: pd.DataFrame):
+        return df.describe()
+  explanation: |
+    `df.describe()` は数値列ごとに count / mean / std / min / 25% / 50%(中央値) / 75% / max を計算します。
+    文字列の列は自動で除外されます。
+  points: |
+    `describe()` は「眺めて気づく」ための道具です。見るポイント:
+    - **count** が行数より少ない → 欠損がある(このデータでは `revenue`)
+    - **mean と 50% の差**が大きい → 分布が歪んでいる・極端な値がある
+    - **min / max** → 負の値、ありえない大きな値がないか
+  mistakes: |
+    - 文字列の列が結果に出てこないのは正常です
+    - 欠損は除外して計算されるので、count が少ない列の平均は「欠損以外の平均」です

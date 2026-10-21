@@ -1,0 +1,20 @@
+id: P008
+title: 条件で行を絞る
+category: B
+problem_type: coding
+difficulty: 1
+learning_level: 1
+primary_tags:
+- syntax:boolean_indexing
+secondary_tags:
+- concept:index_label
+curriculum_items:
+- boolean_indexing
+estimated_minutes: 2
+prerequisites:
+- P007
+datasets:
+- orders.csv
+source_type: synthetic
+variant_of: null
+created: '2026-10-22'

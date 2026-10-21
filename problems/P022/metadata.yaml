@@ -1,0 +1,24 @@
+id: P022
+title: 条件で絞って基本統計を出す
+category: D
+problem_type: coding
+difficulty: 2
+learning_level: 2
+primary_tags:
+- method:median
+- method:max
+secondary_tags:
+- syntax:boolean_indexing
+- task:summary_stats
+curriculum_items:
+- basic_stats
+- boolean_indexing
+estimated_minutes: 3
+prerequisites:
+- P008
+- P005
+datasets:
+- app_users.csv
+source_type: synthetic
+variant_of: null
+created: '2026-10-22'

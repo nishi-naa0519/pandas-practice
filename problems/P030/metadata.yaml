@@ -1,0 +1,22 @@
+id: P030
+title: ID列を文字列に変換する
+category: F
+problem_type: coding
+difficulty: 1
+learning_level: 1
+primary_tags:
+- method:astype
+secondary_tags:
+- concept:data_types
+- task:type_check
+curriculum_items:
+- astype
+- eda_type_anomaly
+estimated_minutes: 2
+prerequisites:
+- P004
+datasets:
+- ad_logs.csv
+source_type: synthetic
+variant_of: null
+created: '2026-10-22'

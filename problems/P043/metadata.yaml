@@ -1,0 +1,31 @@
+id: P043
+title: 顧客マスタの品質上の問題を探す
+category: H
+problem_type: exploration
+difficulty: 3
+learning_level: 3
+primary_tags:
+- task:anomaly_check
+- task:data_cleaning
+secondary_tags:
+- task:missing_check
+- task:duplicate_check
+- task:type_check
+- concept:inconsistent_labels
+- concept:outliers
+- concept:duplicates
+curriculum_items:
+- eda_missing
+- eda_duplicates
+- eda_numeric_range
+- eda_type_anomaly
+estimated_minutes: 10
+prerequisites:
+- P032
+- P018
+- P006
+datasets:
+- members_raw.csv
+source_type: synthetic
+variant_of: null
+created: '2026-10-22'

@@ -1,0 +1,23 @@
+id: P039
+title: ユニーク数の多い列を見つける
+category: H
+problem_type: coding
+difficulty: 2
+learning_level: 2
+primary_tags:
+- method:nunique
+- task:cardinality_check
+secondary_tags:
+- syntax:boolean_indexing
+- concept:cardinality
+curriculum_items:
+- nunique
+- eda_id_cardinality
+estimated_minutes: 4
+prerequisites:
+- P018
+datasets:
+- churn_train.csv
+source_type: synthetic
+variant_of: null
+created: '2026-10-22'

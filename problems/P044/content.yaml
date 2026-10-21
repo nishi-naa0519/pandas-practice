@@ -1,0 +1,37 @@
+purpose: 欠損率とユニーク数を組み合わせて、情報のない列を機械的に見つけられるようにします。
+statement: |
+  特徴量テーブル `df` から、モデルに入れる前に**除外候補にしたい列**の名前をリストで返してください(順番は問いません)。
+
+  除外候補の条件:
+  - 値の**半分を超えて欠損**している列
+  - 値が**1種類しかない**列(欠損は種類に数えない)
+data:
+- churn_train.csv
+setup: df = pd.read_csv("data/churn_train.csv")
+signature: 'def solve(df: pd.DataFrame):'
+run: solve(df)
+hints:
+- 列ごとの欠損率と、列ごとのユニーク数をそれぞれ Series で求めてみましょう
+- 2つの条件の Series は index(列名)がそろっているので、| で組み合わせられます
+- True/False の Series で df.columns を絞ると、条件に合う列名が取れます
+solution:
+  code: |
+    def solve(df: pd.DataFrame):
+        missing_rate = df.isna().mean()
+        n_unique = df.nunique()
+        is_candidate = (missing_rate > 0.5) | (n_unique == 1)
+        return list(df.columns[is_candidate])
+  explanation: |
+    1. `df.isna().mean()` で列ごとの欠損率、`df.nunique()` で列ごとのユニーク数
+    2. どちらも index が列名の Series なので、`|` で「どちらかを満たす」を作れる
+    3. `df.columns[is_candidate]` で True の列名だけを取り出す
+
+    すべて欠損している列はユニーク数が 0 になりますが、欠損率の条件で拾えます。
+  points: |
+    - 欠損率 `df.isna().mean()` とユニーク数 `df.nunique()` は、列の要約として最もよく使う2つ
+    - 同じ index の Series どうしは `&` `|` で組み合わせられる
+    - このデータでは `coupon_code`(約87%欠損)と `country`(全部 "JP")が該当する
+    - あくまで「候補」。欠損していること自体が情報になる場合もある(クーポンを持っているか、など)
+  mistakes: |
+    - `>= 0.5` にしてしまう → 「半分を超えて」なので `> 0.5`
+    - `n_unique <= 1` にすると、全部欠損の列も拾えるが条件の意味が変わる。今回はどちらでも結果は同じ

@@ -1,0 +1,23 @@
+id: P004
+title: 列の型を確認する
+category: A
+problem_type: coding
+difficulty: 1
+learning_level: 1
+primary_tags:
+- method:dtypes
+secondary_tags:
+- task:type_check
+- concept:data_types
+- method:read_csv
+curriculum_items:
+- dtypes
+- eda_type_anomaly
+estimated_minutes: 3
+prerequisites:
+- P001
+datasets:
+- customers.csv
+source_type: synthetic
+variant_of: null
+created: '2026-10-22'

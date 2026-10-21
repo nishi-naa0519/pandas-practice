@@ -1,0 +1,22 @@
+purpose: データのサイズを1秒で確認できるようにします。
+statement: DataFrame `df` の **(行数, 列数)** をタプルで返してください。
+data:
+- orders.csv
+setup: df = pd.read_csv("data/orders.csv")
+signature: 'def solve(df: pd.DataFrame):'
+run: solve(df)
+hints:
+- DataFrame の属性で (行数, 列数) が分かるものがあります
+- df.shape(括弧は付けない)
+solution:
+  code: |
+    def solve(df: pd.DataFrame):
+        return df.shape
+  explanation: '`df.shape` は `(行数, 列数)` のタプルです。メソッドではなく**属性**なので括弧を付けません。'
+  points: |
+    - `df.shape` → `(行数, 列数)`
+    - 行数だけなら `df.shape[0]` か `len(df)`
+    - train / test を受け取ったら、まず両方の `shape` を見る習慣をつける
+  mistakes: |
+    - `df.shape()` → `TypeError: 'tuple' object is not callable`(属性なので括弧不要)
+    - `len(df)` は行数だけ。列数は分かりません

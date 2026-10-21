@@ -1,0 +1,21 @@
+purpose: グループ集計の結果を並び替えて、差の大きいグループをすぐ見つけられるようにします。
+statement: '`country` ごとの `sessions_7d` の**平均**を求め、**平均が高い順**に並べた Series を返してください。'
+data:
+- app_users.csv
+setup: df = pd.read_csv("data/app_users.csv")
+signature: 'def solve(df: pd.DataFrame):'
+run: solve(df)
+hints:
+- groupby の結果は Series なので、そのまま並び替えられます
+- .sort_values(ascending=False) をつなげます
+solution:
+  code: |
+    def solve(df: pd.DataFrame):
+        return df.groupby("country")["sessions_7d"].mean().sort_values(ascending=False)
+  explanation: '`groupby(...)[...].mean()` の結果は「国 → 平均」の Series です。Series なので `.sort_values()` で並べられます。'
+  points: |
+    - グループ集計 → 並び替え: `df.groupby("cat")["val"].mean().sort_values(ascending=False)`
+    - 実データでは極端な値(999 など)が平均を大きく動かすことがある。気になったら `.median()` でも見る
+  mistakes: |
+    - `sort_values("sessions_7d")` → Series の sort_values に列名は不要
+    - 並び替えを groupby の前にしても、集計結果の順番は変わらない

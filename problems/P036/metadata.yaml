@@ -1,0 +1,25 @@
+id: P036
+title: left join して対応のない行を数える
+category: G
+problem_type: coding
+difficulty: 2
+learning_level: 2
+primary_tags:
+- method:merge
+- task:join_check
+secondary_tags:
+- method:isna
+- concept:join_types
+curriculum_items:
+- merge_basic
+- isna_count
+estimated_minutes: 4
+prerequisites:
+- P035
+- P014
+datasets:
+- orders.csv
+- customers.csv
+source_type: synthetic
+variant_of: null
+created: '2026-10-22'

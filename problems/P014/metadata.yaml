@@ -1,0 +1,22 @@
+id: P014
+title: 列ごとの欠損数
+category: C
+problem_type: coding
+difficulty: 1
+learning_level: 1
+primary_tags:
+- method:isna
+- task:missing_check
+secondary_tags:
+- method:sum
+- concept:missing_values
+curriculum_items:
+- isna_count
+estimated_minutes: 2
+prerequisites:
+- P006
+datasets:
+- customers.csv
+source_type: synthetic
+variant_of: null
+created: '2026-10-22'

@@ -1,0 +1,22 @@
+id: P017
+title: 重複行の数を数える
+category: C
+problem_type: coding
+difficulty: 1
+learning_level: 1
+primary_tags:
+- method:duplicated
+- task:duplicate_check
+secondary_tags:
+- method:sum
+- concept:duplicates
+curriculum_items:
+- duplicated
+estimated_minutes: 2
+prerequisites:
+- P014
+datasets:
+- customers.csv
+source_type: synthetic
+variant_of: null
+created: '2026-10-22'

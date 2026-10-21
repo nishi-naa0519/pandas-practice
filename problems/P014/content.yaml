@@ -1,0 +1,25 @@
+purpose: 読み込み直後に「どの列に欠損が何件あるか」を反射的に確認できるようにします。
+statement: '`df` の**列ごとの欠損数**を Series で返してください(index が列名、値が欠損数)。'
+data:
+- customers.csv
+setup: df = pd.read_csv("data/customers.csv")
+preview: df.head()
+signature: 'def solve(df: pd.DataFrame):'
+run: solve(df)
+hints:
+- df.isna() で「欠損なら True」の表になります
+- True は 1 として数えられるので、.sum() で列ごとの件数になります
+solution:
+  code: |
+    def solve(df: pd.DataFrame):
+        return df.isna().sum()
+  explanation: |
+    1. `df.isna()` で、欠損のセルが True、それ以外が False の DataFrame を作ります
+    2. `.sum()` は列ごとに合計します。True は 1、False は 0 として数えられるので、欠損数になります
+  points: |
+    - 欠損数: `df.isna().sum()`
+    - 1列だけ: `df["age"].isna().sum()`
+    - True/False の Series に `.sum()` → True の件数、という使い方はいろいろな場面で出てくる
+  mistakes: |
+    - `df.isna` と括弧を忘れる
+    - `df.count()` は**欠損でない**件数。欠損数とは逆

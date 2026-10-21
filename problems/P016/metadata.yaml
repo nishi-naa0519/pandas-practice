@@ -1,0 +1,25 @@
+id: P016
+title: 欠損がある行を見る
+category: C
+problem_type: coding
+difficulty: 2
+learning_level: 2
+primary_tags:
+- method:isna
+- syntax:multiple_conditions
+secondary_tags:
+- syntax:boolean_indexing
+- task:missing_check
+curriculum_items:
+- isna_count
+- multiple_conditions
+- eda_missing
+estimated_minutes: 3
+prerequisites:
+- P014
+- P010
+datasets:
+- customers.csv
+source_type: synthetic
+variant_of: null
+created: '2026-10-22'

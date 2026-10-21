@@ -1,0 +1,21 @@
+id: P035
+title: 2つの表をキーで結合する
+category: G
+problem_type: coding
+difficulty: 1
+learning_level: 1
+primary_tags:
+- method:merge
+secondary_tags:
+- concept:join_types
+curriculum_items:
+- merge_basic
+estimated_minutes: 3
+prerequisites:
+- P007
+datasets:
+- orders.csv
+- customers.csv
+source_type: synthetic
+variant_of: null
+created: '2026-10-22'

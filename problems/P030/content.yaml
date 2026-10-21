@@ -1,0 +1,26 @@
+purpose: 列の型を意図した型に変換できるようにします。
+statement: |
+  `ad_id` は数値として読み込まれていますが、計算に使う値ではなく広告の ID です。
+  `ad_id` を**文字列型**に変換し、**`df` 全体**を返してください。
+data:
+- ad_logs.csv
+setup: df = pd.read_csv("data/ad_logs.csv")
+preview: df.dtypes
+signature: 'def solve(df: pd.DataFrame):'
+run: solve(df)
+hints:
+- 型の変換は .astype(型)
+- df["ad_id"] = df["ad_id"].astype(str)
+solution:
+  code: |
+    def solve(df: pd.DataFrame):
+        df["ad_id"] = df["ad_id"].astype(str)
+        return df
+  explanation: '`.astype(str)` で文字列型に変換し、元の列に代入し直します。'
+  points: |
+    - 型変換: `df["col"] = df["col"].astype(str)`(`int` や `float` も同様)
+    - ID を数値のままにしておくと、`describe()` に出てきたり、モデルに数値特徴量として入ってしまったりする
+    - `"1,200"` や `"unknown"` が混ざった列は `astype(int)` ではエラーになる。そういう変換は AI に書かせてよい
+  mistakes: |
+    - `df["ad_id"].astype(str)` だけで代入しない → df は変わらない
+    - `astype("string")` でも動くが、このカリキュラムでは `astype(str)` に統一する

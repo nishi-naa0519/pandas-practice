@@ -1,0 +1,28 @@
+purpose: 文字列の部分一致で行を絞り、そのまま集計できるようにします。
+statement: |
+  `page` が `"/product/"` を**含む**ログ(商品詳細ページへのアクセス)について、
+  `device` ごとの件数を多い順の Series で返してください。
+data:
+- web_logs.csv
+setup: df = pd.read_csv("data/web_logs.csv")
+preview: df["page"].value_counts().head(10)
+signature: 'def solve(df: pd.DataFrame):'
+run: solve(df)
+hints:
+- df["page"].str.contains("/product/") は「含むなら True」の Series です
+- 絞り込んだあと ["device"].value_counts()
+solution:
+  code: |
+    def solve(df: pd.DataFrame):
+        product = df[df["page"].str.contains("/product/")]
+        return product["device"].value_counts()
+  explanation: |
+    1. `df["page"].str.contains("/product/")` で、部分一致する行が True の Series を作る
+    2. boolean indexing で行を絞る
+    3. 絞り込んだ DataFrame の `device` 列を `value_counts()`
+  points: |
+    - 部分一致: `df[df["col"].str.contains("文字列")]`
+    - 「絞る → 列を選ぶ → 集計」は EDA で最もよく使う組み合わせ
+  mistakes: |
+    - 列に欠損があると `str.contains` の結果に NaN が混ざり、絞り込みでエラーになる(そのときは `na=False` を付ける)
+    - `df["page"] == "/product/"` → 完全一致になり、`/product/123` は含まれない

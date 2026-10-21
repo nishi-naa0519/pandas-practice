@@ -1,0 +1,58 @@
+purpose: 結合の前後で行数を確かめ、行が「消える」「増える」原因を見つけられるようにします。
+statement: |
+  `orders`(注文)と `customers`(顧客)を結合して、顧客属性ごとの売上を分析しようとしています。
+  集計に入る前に、**結合が正しくできているか**を確認してください。
+questions: |
+  1. inner join / left join した結果の行数はそれぞれいくつか。`orders` の行数と比べてどうか
+  2. `customers` に存在しない顧客の注文はあるか。何件か
+  3. 結合で行が増えることはあるか。あるならその原因は何か
+  4. 正しく結合するには、結合前に何をすればよいか
+data:
+- orders.csv
+- customers.csv
+setup: |
+  orders = pd.read_csv("data/orders.csv")
+  customers = pd.read_csv("data/customers.csv")
+hints:
+- まず len(orders), len(customers) と、結合後の len を比べましょう
+- 結合キーが customers 側で一意かどうかを確認しましょう(P018)
+- left join 後に customers 側の列が欠損している行が「対応のない注文」です(P036)
+solution:
+  checklist: |
+    1. 結合前の行数(`len`)
+    2. 結合キーが右側の表で一意か(`nunique()` と `len` を比べる)
+    3. 結合後の行数(inner と left)
+    4. 対応のないキーの件数(left join 後の欠損)
+    5. 行が増えたなら、キーの重複を確認して取り除いてから結合し直す
+  code: |
+    len(orders), len(customers)
+    # %%
+    inner = pd.merge(orders, customers, on="customer_id")
+    left = pd.merge(orders, customers, on="customer_id", how="left")
+    len(inner), len(left)
+    # %%
+    # 対応のない注文
+    left["plan"].isna().sum()
+    # %%
+    left[left["plan"].isna()]["customer_id"].value_counts()
+    # %%
+    # customers の customer_id は一意か
+    customers["customer_id"].nunique(), len(customers)
+    # %%
+    customers[customers["customer_id"].duplicated()]
+    # %%
+    customers_clean = customers.drop_duplicates()
+    left_clean = pd.merge(orders, customers_clean, on="customer_id", how="left")
+    len(left_clean)
+  observations: |
+    1. `orders` は 300 行。**inner join も 300 行で一見正しそう**だが、left join は **309 行**に増えている
+    2. `customers` に存在しない顧客(C121〜C125)の注文が **9件**ある。inner join ではこれが消えている
+    3. `customers` は 123 行だが `customer_id` は 120 種類。**3人分の行が完全重複**している(C018, C055, C089)。
+       その顧客の注文(9件)が結合で2行ずつになり、行が増えている
+    4. inner join の 300 行は「9件消えて9件増えた」偶然の一致。**行数が同じでも正しいとは限らない**
+    5. 結合前に `customers.drop_duplicates()` で重複を除くと、left join は 300 行(orders と同じ)になる
+  points: |
+    - 結合の前後で必ず `len()` を比べる
+    - 右側の表のキーが一意か(`nunique() == len()`)を結合前に確認する
+    - left join 後の欠損で、対応のないキーを数える
+    - 複雑な結合の検証(`validate=` や `indicator=`)は Read / AI 対象。まずはこの3つで十分

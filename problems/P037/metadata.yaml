@@ -1,0 +1,27 @@
+id: P037
+title: 結合結果の行数は正しいか
+category: G
+problem_type: exploration
+difficulty: 3
+learning_level: 3
+primary_tags:
+- task:join_check
+secondary_tags:
+- method:merge
+- method:nunique
+- method:duplicated
+- concept:join_types
+- concept:unique_key
+curriculum_items:
+- eda_join_sanity
+- merge_basic
+estimated_minutes: 8
+prerequisites:
+- P036
+- P018
+datasets:
+- orders.csv
+- customers.csv
+source_type: synthetic
+variant_of: null
+created: '2026-10-22'

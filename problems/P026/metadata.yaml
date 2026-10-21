@@ -1,0 +1,26 @@
+id: P026
+title: グループごとの目的変数の平均と件数
+category: E
+problem_type: coding
+difficulty: 2
+learning_level: 2
+primary_tags:
+- method:agg
+- task:target_analysis
+secondary_tags:
+- method:groupby
+- method:mean
+- method:count
+- concept:sample_size
+curriculum_items:
+- groupby_agg_simple
+- eda_group_target
+estimated_minutes: 4
+prerequisites:
+- P023
+- P020
+datasets:
+- churn_train.csv
+source_type: synthetic
+variant_of: null
+created: '2026-10-22'

@@ -1,0 +1,71 @@
+purpose: データ品質の問題(欠損・重複・異常値・表記ゆれ・型)を、指示なしで一通り探せるようにします。
+statement: |
+  他チームから会員マスタ `members_raw.csv` を受け取りました。分析や特徴量作成に使う前に、
+  **品質上の問題がないか**をできるだけ見つけてください。
+
+  見つけた問題は、感想メモに一言で書いておくと後で振り返りやすくなります。
+questions: |
+  - 欠損はどこにどれくらいあるか
+  - 重複はあるか(完全重複行と、ID だけ重複している行)
+  - ありえない値はあるか
+  - 同じ意味なのに表記が違う値はあるか
+  - 型がおかしい列はあるか
+data:
+- members_raw.csv
+setup: df = pd.read_csv("data/members_raw.csv")
+hints:
+- 欠損 → 重複 → 数値の範囲 → カテゴリの値 → 型 の順に確認してみましょう
+- ID の重複は df["member_id"].duplicated().sum()、完全重複は df.duplicated().sum()
+- カテゴリ列は1列ずつ value_counts() で中身を見ると表記ゆれが分かります
+- 数値のはずなのに describe() に出てこない列がないか見てみましょう
+solution:
+  checklist: |
+    1. 全体: `shape`, `head()`, `dtypes`
+    2. 欠損: `isna().sum()`
+    3. 重複: `duplicated().sum()` と `["member_id"].duplicated().sum()`。重複している ID の行を見る
+    4. 数値の範囲: `describe()`、怪しい値の行を条件で抽出
+    5. カテゴリ: 各列の `value_counts()`
+    6. 日付: `min()` / `max()`
+  code: |
+    df.shape
+    # %%
+    df.head()
+    # %%
+    df.dtypes
+    # %%
+    df.isna().sum()
+    # %%
+    df.duplicated().sum(), df["member_id"].duplicated().sum()
+    # %%
+    # 完全重複ではないのに ID が重複している行
+    dup_ids = df[df["member_id"].duplicated()]["member_id"]
+    df[df["member_id"].isin(dup_ids)].sort_values("member_id")
+    # %%
+    df.describe()
+    # %%
+    df[(df["age"] < 0) | (df["age"] > 120)]
+    # %%
+    df["gender"].value_counts()
+    # %%
+    df["prefecture"].value_counts()
+    # %%
+    df["plan"].value_counts()
+    # %%
+    df["signup_date"].min(), df["signup_date"].max()
+  observations: |
+    | 問題 | 内容 |
+    |---|---|
+    | 欠損 | `age` 19件、`prefecture` 9件 |
+    | 完全重複行 | 3行(M0101〜M0103) |
+    | **ID だけ重複** | M0021, M0022 が2行ずつあり、`plan` が free と premium で食い違っている。どちらが正しいか確認が必要(完全重複ではないので `drop_duplicates()` では消えない) |
+    | 異常値 | `age` に **999 が2件、-1 が1件**。平均 54.7 に対して中央値 48、std 100 と describe からも分かる |
+    | 表記ゆれ | `gender`: M / F に加えて male, female, 女性。`prefecture`: tokyo, TOKYO, `"Tokyo "`(末尾に空白) |
+    | 型 | `monthly_spend` が `str`。`"7,620"` のようにカンマ付きの文字列なので、describe に出てこない |
+    | 日付 | `signup_date` の最大が **2026-12-01**。他は 2025-03 までなので、入力ミスの可能性 |
+
+    表記ゆれの統一やカンマ付き文字列の数値化は、ここで見つけられれば十分です。変換処理は AI に書かせて構いません。
+  points: |
+    - 品質チェックの型: **欠損 → 重複(行とID) → 数値の範囲 → カテゴリの値 → 型 → 日付の範囲**
+    - 「ID だけ重複」は完全重複より厄介。`df[df["id"].isin(重複ID)]` で中身を見比べる
+    - カテゴリ列は `value_counts()` を1列ずつ見るのが一番早い
+    - 「数値のはずの列が describe に出てこない」= 型がおかしいサイン

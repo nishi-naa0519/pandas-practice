@@ -1,0 +1,24 @@
+id: P029
+title: 欠損を中央値で埋める
+category: F
+problem_type: coding
+difficulty: 2
+learning_level: 2
+primary_tags:
+- method:fillna
+secondary_tags:
+- method:median
+- task:data_cleaning
+- concept:missing_values
+curriculum_items:
+- fillna
+- basic_stats
+estimated_minutes: 3
+prerequisites:
+- P014
+- P022
+datasets:
+- customers.csv
+source_type: synthetic
+variant_of: null
+created: '2026-10-22'
